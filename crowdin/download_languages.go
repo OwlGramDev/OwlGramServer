@@ -60,6 +60,7 @@ func (ctx *Context) downloadLanguages() {
 			for i := 0; i < len(ctx.LanguagesList); i++ {
 				waitUntilFinish.Add(1)
 				go func(i int) {
+					defer waitUntilFinish.Done()
 					translationsOnlyApproved, err1 := ctx.GetTranslationsExported(ctx.LanguagesList[i].Id, true)
 					translations, err2 := ctx.GetTranslationsExported(ctx.LanguagesList[i].Id, false)
 					translationsInfo, err3 := ctx.GetTranslationInfo(ctx.LanguagesList[i].Id)
@@ -87,7 +88,6 @@ func (ctx *Context) downloadLanguages() {
 					} else {
 						log.Println(err1, err2, err3)
 					}
-					waitUntilFinish.Done()
 				}(i)
 			}
 			waitUntilFinish.Wait()
