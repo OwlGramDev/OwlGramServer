@@ -6,15 +6,13 @@ import (
 	telegram "OwlGramServer/tg_bot"
 	"OwlGramServer/tg_bot/types"
 	"OwlGramServer/utilities"
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/Squirrel-Network/gobotapi"
 	"github.com/Squirrel-Network/gobotapi/methods"
+	"github.com/flosch/pongo2"
 	"github.com/valyala/fasthttp"
 	"golang.org/x/exp/utf8string"
 	"golang.org/x/net/html"
-	"io"
 	"os"
 	"path"
 	"strconv"
@@ -78,43 +76,27 @@ func WebApp(ctx *fasthttp.RequestCtx, crowdinClient *crowdin.Context, telegramCl
 		}
 	} else {
 		ctx.SetContentType("text/html; charset=UTF-8")
-		r, _ := os.ReadFile(path.Join(consts.WebAppFiles, "webapp.html"))
-		r = bytes.ReplaceAll(r, []byte("%TIME%"), []byte(strconv.Itoa(int(time.Now().Unix()))))
-		node, _ := html.Parse(bytes.NewBuffer(r))
-		bodyElement := utilities.GetHtmlElementByTag(utilities.GetHtmlElementByTag(node, "html"), "body")
-		approvedStrings := crowdinClient.GetAllApprovedStrings()
-
-		for _, nonApprovedString := range approvedStrings {
-			result, _ := html.Parse(bytes.NewBuffer([]byte(fmt.Sprintf("<div class=\"section_descriptor\" style=\"display: none;opacity: 0;\">%s</div>", utilities.GetAndroidLangName(nonApprovedString.LanguageCode)))))
-			bodyElement.AppendChild(result)
-			for _, stringToApprove := range nonApprovedString.Vars {
-				var buf bytes.Buffer
-				w := io.Writer(&buf)
-				_ = html.Render(w, bodyElement.FirstChild.NextSibling)
-				translatorName := stringToApprove.TranslatorName
-				s := utf8string.NewString(translatorName)
-				if s.RuneCount() == 0 {
-					continue
-				}
-				htmlNew := fmt.Sprintf(
-					buf.String(),
-					strings.ToUpper(s.Slice(0, 1)),
-					stringToApprove.Lang,
-					fmt.Sprintf("New Translation by %s", stringToApprove.TranslatorName),
-					stringToApprove.Name,
-					html.EscapeString(stringToApprove.Text),
-					stringToApprove.TranslationId,
-					stringToApprove.TranslationId,
-				)
-				result, _ = html.Parse(bytes.NewBuffer([]byte(htmlNew)))
-				bodyElement.AppendChild(result)
-			}
+		file, _ := os.ReadFile(path.Join(consts.WebAppFiles, "webapp.html"))
+		tmp, err := pongo2.FromBytes(file)
+		if err != nil {
+			Forbidden(ctx)
+			return
 		}
-		bodyElement.RemoveChild(bodyElement.FirstChild.NextSibling)
-		var buf bytes.Buffer
-		w := io.Writer(&buf)
-		_ = html.Render(w, node)
-		ctx.SetBody(buf.Bytes())
+		resBuild, err := tmp.Execute(pongo2.Context{
+			"currentTime":           time.Now().Unix(),
+			"getAllApprovedStrings": crowdinClient.GetAllApprovedStrings,
+			"getShortName": func(name string) string {
+				s := utf8string.NewString(name)
+				return strings.ToUpper(s.Slice(0, 1))
+			},
+			"getAndroidLangName": utilities.GetAndroidLangName,
+			"escapeString":       html.EscapeString,
+		})
+		if err != nil {
+			Forbidden(ctx)
+			return
+		}
+		ctx.SetBody([]byte(resBuild))
 	}
 	ctx.SetConnectionClose()
 }
