@@ -1,5 +1,7 @@
 package consts
 
+import "OwlGramServer/github_bot/types"
+
 const BasePathOwlGram = "/home/owlgram/"
 const BaseWWWPath = "/var/www/"
 const WebServerPath = BasePathOwlGram + "app.owlgram.org/"
@@ -38,6 +40,20 @@ const StaffGroupID = -1001267698171
 const Tappo03UserID = 225117913
 const BotImagesCache = CacheFolder + "bot_images_cache/"
 const WebAppAuthTimeout = 3600
+
+var GithubGroups = []types.Group{
+	{
+		ID:      -1001631666002, // OwlGramIT
+		ForumID: 43580,
+	},
+	{
+		ID:      -1001672748705, // OwlGram
+		ForumID: 38534,
+	},
+	{
+		ID: -1001703872347, // Internal testing
+	},
+}
 
 const GithubRepo = "OwlGram"
 const GithubRepoOwner = "OwlGramDev"

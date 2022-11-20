@@ -2,6 +2,7 @@ package main
 
 import (
 	"OwlGramServer/consts"
+	"OwlGramServer/github_bot"
 	"OwlGramServer/handlers"
 	"github.com/valyala/fasthttp"
 )
@@ -16,34 +17,27 @@ func handler(ctx *fasthttp.RequestCtx) {
 		switch string(ctx.Path()) {
 		case "/get_changelogs":
 			handlers.Changelogs(ctx, updatesClient)
-			break
 		case "/version":
 			handlers.Updates(ctx, updatesClient)
-			break
 		case "/dc_status":
 			handlers.DcStatus(ctx, tgChecker)
-			break
 		case "/language_pack":
 			handlers.LanguagePack(ctx, crowdinClient)
-			break
 		case "/language_version":
 			handlers.LanguageVersion(ctx, crowdinClient)
-			break
 		case "/webapp":
 			handlers.WebApp(ctx, crowdinClient, botClient.TelegramClient)
-			break
 		default:
 			handlers.NotFound(ctx)
-			break
 		}
 	} else if ctx.IsPost() {
 		switch string(ctx.Path()) {
 		case "/saveDcData":
 			handlers.SaveDCData(ctx, tgChecker)
-			break
 		case "/notify_upload":
 			handlers.NotifyUpload(ctx, botClient)
-			break
+		case "/notify_github":
+			github_bot.SendPushEvent(ctx)
 		default:
 			handlers.NotFound(ctx)
 			break

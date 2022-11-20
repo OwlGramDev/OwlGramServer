@@ -8,6 +8,8 @@ import (
 
 var CrowdinAuthToken string
 var BotToken string
+var GithubBotToken string
+var GithubToken string
 var SecretDCKey string
 var HuaweiClientId string
 var HuaweiClientSecret string
@@ -25,6 +27,8 @@ func LoadEnv() {
 	}
 	CrowdinAuthToken = os.Getenv("CROWDIN_AUTH_TOKEN")
 	BotToken = os.Getenv("BOT_TOKEN")
+	GithubBotToken = os.Getenv("GITHUB_BOT_TOKEN")
+	GithubToken = os.Getenv("GITHUB_TOKEN")
 	SecretDCKey = os.Getenv("SECRET_DC_KEY")
 	HuaweiClientId = os.Getenv("HUAWEI_CLIENT_ID")
 	HuaweiClientSecret = os.Getenv("HUAWEI_CLIENT_SECRET")
