@@ -26,6 +26,10 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 		handlers.Forbidden(ctx)
 		return
 	}
+	if len(event.Commits) == 0 {
+		handlers.Forbidden(ctx)
+		return
+	}
 	message := fmt.Sprintf("📋 New Update in <a href='%s'>%s</a>\n\n", event.Repository.HTMLUrl, event.Repository.FullName)
 	for i, commit := range event.Commits {
 		if i >= 25 {
