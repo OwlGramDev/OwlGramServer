@@ -10,6 +10,7 @@ import (
 	"github.com/Squirrel-Network/gobotapi/logger"
 	"github.com/Squirrel-Network/gobotapi/methods"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 	"sync"
 )
 
@@ -26,7 +27,8 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 		handlers.Forbidden(ctx)
 		return
 	}
-	if len(event.Commits) == 0 {
+	branchName := event.Ref[11:]
+	if len(event.Commits) == 0 || !slices.Contains(consts.AllowedBranches, branchName) {
 		handlers.Forbidden(ctx)
 		return
 	}

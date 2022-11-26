@@ -54,6 +54,7 @@ var GithubGroups = []types.Group{
 		ID: -1001703872347, // Internal testing
 	},
 }
+var AllowedBranches = []string{"master", "develop"}
 
 const GithubRepo = "OwlGram"
 const GithubRepoOwner = "OwlGramDev"
