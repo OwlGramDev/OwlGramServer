@@ -44,6 +44,8 @@ func GetAndroidLangName(langCode string) string {
 		return "Ukrainian"
 	case "uz-rUZ":
 		return "Uzbek"
+	case "vi-rVN":
+		return "Vietnamese"
 	case "zh-rCN":
 		return "Chinese (Simplified)"
 	case "zh-rTW":
