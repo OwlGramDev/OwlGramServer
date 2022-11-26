@@ -28,7 +28,7 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	branchName := event.Ref[11:]
-	if len(event.Commits) == 0 || !slices.Contains(consts.AllowedBranches, branchName) {
+	if len(event.Commits) == 0 {
 		handlers.Forbidden(ctx)
 		return
 	}
@@ -49,16 +49,18 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 	_ = client.Start()
 	wait := sync.WaitGroup{}
 	for _, group := range consts.GithubGroups {
-		wait.Add(1)
-		go func(group types.Group) {
-			_, _ = client.Invoke(&methods.SendMessage{
-				ChatID:           group.ID,
-				Text:             message,
-				ReplyToMessageID: group.ForumID,
-				ParseMode:        "HTML",
-			})
-			wait.Done()
-		}(group)
+		if slices.Contains(group.AllowedBranches, branchName) {
+			wait.Add(1)
+			go func(group types.Group) {
+				_, _ = client.Invoke(&methods.SendMessage{
+					ChatID:           group.ID,
+					Text:             message,
+					ReplyToMessageID: group.ForumID,
+					ParseMode:        "HTML",
+				})
+				wait.Done()
+			}(group)
+		}
 	}
 	wait.Wait()
 	client.Stop()

@@ -43,18 +43,20 @@ const WebAppAuthTimeout = 3600
 
 var GithubGroups = []types.Group{
 	{
-		ID:      -1001631666002, // OwlGramIT
-		ForumID: 43580,
+		ID:              -1001631666002, // OwlGramIT
+		ForumID:         43580,
+		AllowedBranches: []string{"master"},
 	},
 	{
-		ID:      -1001672748705, // OwlGram
-		ForumID: 38534,
+		ID:              -1001672748705, // OwlGram
+		ForumID:         38534,
+		AllowedBranches: []string{"master"},
 	},
 	{
-		ID: -1001703872347, // Internal testing
+		ID:              -1001703872347, // Internal testing
+		AllowedBranches: []string{"master", "develop"},
 	},
 }
-var AllowedBranches = []string{"master", "develop"}
 
 const GithubRepo = "OwlGram"
 const GithubRepoOwner = "OwlGramDev"
