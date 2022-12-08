@@ -2,8 +2,12 @@ package reviews
 
 import (
 	"OwlGramServer/consts"
+	"OwlGramServer/translator"
+	"OwlGramServer/utilities"
 	"fmt"
 	"github.com/Squirrel-Network/gobotapi/methods"
+	"golang.org/x/text/language"
+	"golang.org/x/text/language/display"
 	"sort"
 	"strconv"
 	"time"
@@ -20,7 +24,7 @@ func (ctx *Context) Run() {
 			})
 			for reviewIndex := range reviewsList {
 				review := reviewsList[reviewIndex]
-				currMD5 := ctx.getMD5Review(review)
+				currMD5 := review.GetMD5()
 				if !ctx.containsMD5(currMD5) {
 					notificationMessage := "<b>⭐️ Nuova Recensione</b>\n"
 					if len(review.AuthorName) > 0 {
@@ -29,6 +33,14 @@ func (ctx *Context) Run() {
 					notificationMessage += "<b>• Stelle:</b> <code>" + strconv.Itoa(int(review.StarRating)) + "</code>\n"
 					if len(review.Text) > 0 {
 						notificationMessage += "<b>• Testo:</b>" + review.Text + "\n"
+						res := translator.Translate(review.Text, "it")
+						if res != nil && res.SourceLanguage != "it" {
+							italian := display.Italian.Languages()
+							source := language.MustParse(res.SourceLanguage)
+							to := language.MustParse("it")
+							notificationMessage += fmt.Sprintf("\n<b>Traduzione %s > %s </b>\n", utilities.Capitalize(italian.Name(source)), utilities.Capitalize(italian.Name(to)))
+							notificationMessage += fmt.Sprintf("<i>%s</i>\n", res.Translation)
+						}
 					}
 					notificationMessage += "\n<b>🤖 Info sul dispositivo</b>\n"
 					if review.DeviceModel != nil {

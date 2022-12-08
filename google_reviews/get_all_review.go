@@ -36,6 +36,7 @@ func (ctx *Context) GetAllReview() *[]types.ReviewInfo {
 					LastModified = comment.LastModified.Seconds
 				}
 				listReviews = append(listReviews, types.ReviewInfo{
+					ID:             reviewInfo.ReviewId,
 					AuthorName:     reviewInfo.AuthorName,
 					AndroidSDK:     int8(comment.AndroidOsVersion),
 					AppVersionCode: int32(comment.AppVersionCode),
