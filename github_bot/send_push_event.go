@@ -32,7 +32,7 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 		handlers.Forbidden(ctx)
 		return
 	}
-	message := fmt.Sprintf("📋 New Update in <a href='%s'>%s</a>\n\n", event.Repository.HTMLUrl, event.Repository.FullName)
+	message := fmt.Sprintf("📋 New Update in <a href='%s/tree/%s'>%s/%s</a>\n\n", event.Repository.HTMLUrl, branchName, event.Repository.FullName, branchName)
 	for i, commit := range event.Commits {
 		if i >= 15 && len(event.Commits) > 15 {
 			moreCompare := fmt.Sprintf("https://github.com/OwlGramDev/OwlGram/compare/%s...%s", commit.ID[:12], event.Commits[len(event.Commits)-1].ID[:12])
