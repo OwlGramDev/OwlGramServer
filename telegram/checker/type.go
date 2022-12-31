@@ -1,6 +1,6 @@
-package tg_checker
+package checker
 
-import "OwlGramServer/tg_checker/types"
+import "OwlGramServer/telegram/checker/types"
 
 type Context struct {
 	StatusDC     []types.DCStatus

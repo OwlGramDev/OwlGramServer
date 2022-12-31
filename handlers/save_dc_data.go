@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/tg_checker"
-	"OwlGramServer/tg_checker/types"
+	"OwlGramServer/telegram/checker"
+	"OwlGramServer/telegram/checker/types"
 	"encoding/json"
 	"github.com/valyala/fasthttp"
 	"time"
 )
 
-func SaveDCData(ctx *fasthttp.RequestCtx, tgChecker *tg_checker.Context) {
+func SaveDCData(ctx *fasthttp.RequestCtx, tgChecker *checker.Context) {
 	secretKey := ctx.Request.URI().QueryArgs().Peek("secretKey")
 	if secretKey != nil {
 		if string(secretKey) == consts.SecretDCKey {

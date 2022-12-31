@@ -1,4 +1,4 @@
-package tg_bot
+package bot
 
 import (
 	"OwlGramServer/consts"

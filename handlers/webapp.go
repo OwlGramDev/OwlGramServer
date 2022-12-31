@@ -3,8 +3,8 @@ package handlers
 import (
 	"OwlGramServer/consts"
 	"OwlGramServer/crowdin"
-	telegram "OwlGramServer/tg_bot"
-	"OwlGramServer/tg_bot/types"
+	telegram "OwlGramServer/telegram/bot"
+	"OwlGramServer/telegram/bot/types"
 	"OwlGramServer/utilities"
 	"encoding/json"
 	"github.com/Squirrel-Network/gobotapi"

@@ -1,4 +1,4 @@
-package tg_bot
+package bot
 
 import (
 	"OwlGramServer/compiler"
@@ -47,7 +47,7 @@ func (c *Context) SendApks(chatId int64) error {
 	var errMess bytes.Buffer
 	cmd := exec.Command("bash", "-c", strings.Join([]string{
 		"source env/bin/activate",
-		fmt.Sprintf("python3.10 __main__.py %s",  hex.EncodeToString(marshal)),
+		fmt.Sprintf("python3.10 __main__.py %s", hex.EncodeToString(marshal)),
 	}, " && "))
 	cmd.Dir = consts.PythonLibApkSenderPath
 	cmd.Stderr = &errMess

@@ -1,9 +1,9 @@
-package tg_bot
+package bot
 
 import (
 	"OwlGramServer/compiler"
 	"OwlGramServer/stores"
-	"OwlGramServer/tg_bot/reviews"
+	"OwlGramServer/telegram/bot/reviews"
 	"OwlGramServer/updates"
 	"github.com/Squirrel-Network/gobotapi"
 	"github.com/Squirrel-Network/gobotapi/types"

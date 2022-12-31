@@ -1,8 +1,8 @@
-package tg_bot
+package bot
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/tg_bot/types"
+	"OwlGramServer/telegram/bot/types"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"

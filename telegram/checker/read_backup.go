@@ -1,8 +1,8 @@
-package tg_checker
+package checker
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/tg_checker/types"
+	"OwlGramServer/telegram/checker/types"
 	"encoding/json"
 	"os"
 )

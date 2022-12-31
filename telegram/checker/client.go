@@ -1,7 +1,7 @@
-package tg_checker
+package checker
 
 import (
-	"OwlGramServer/tg_checker/types"
+	"OwlGramServer/telegram/checker/types"
 	"log"
 )
 

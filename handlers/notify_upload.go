@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/tg_bot"
+	"OwlGramServer/telegram/bot"
 	"github.com/Squirrel-Network/gobotapi/methods"
 	"github.com/valyala/fasthttp"
 )
 
-func NotifyUpload(ctx *fasthttp.RequestCtx, bot *tg_bot.Context) {
+func NotifyUpload(ctx *fasthttp.RequestCtx, bot *bot.Context) {
 	token := ctx.Request.Header.Peek("Token")
 	if token == nil {
 		Forbidden(ctx)

@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"OwlGramServer/tg_checker"
-	"OwlGramServer/tg_checker/types"
+	"OwlGramServer/telegram/checker"
+	"OwlGramServer/telegram/checker/types"
 	"encoding/json"
 	"github.com/valyala/fasthttp"
 	"time"
 )
 
-func DcStatus(ctx *fasthttp.RequestCtx, tgChecker *tg_checker.Context) {
+func DcStatus(ctx *fasthttp.RequestCtx, tgChecker *checker.Context) {
 	ctx.SetContentType("application/json")
 	ctx.SetStatusCode(fasthttp.StatusOK)
 	ctx.Response.Header.Set("Access-Control-Allow-Origin", "https://status.owlgram.org")

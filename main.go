@@ -4,14 +4,14 @@ import (
 	"OwlGramServer/consts"
 	"OwlGramServer/crowdin"
 	"OwlGramServer/http/webserver"
-	"OwlGramServer/tg_bot"
-	"OwlGramServer/tg_checker"
+	"OwlGramServer/telegram/bot"
+	"OwlGramServer/telegram/checker"
 	"OwlGramServer/updates"
 	"os"
 )
 
-var botClient *tg_bot.Context
-var tgChecker *tg_checker.Context
+var botClient *bot.Context
+var tgChecker *checker.Context
 var crowdinClient *crowdin.Context
 var updatesClient *updates.Context
 
@@ -22,9 +22,9 @@ func main() {
 	}
 	crowdinClient = crowdin.Client()
 	updatesClient = updates.Client()
-	botClient = tg_bot.Bot(updatesClient)
+	botClient = bot.Bot(updatesClient)
 	if !consts.IsDebug {
-		tgChecker = tg_checker.Client()
+		tgChecker = checker.Client()
 		go tgChecker.Run()
 	}
 

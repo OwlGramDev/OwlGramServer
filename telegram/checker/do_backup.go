@@ -1,4 +1,4 @@
-package tg_checker
+package checker
 
 import (
 	"OwlGramServer/consts"
