@@ -3,6 +3,7 @@ package consts
 import (
 	"github.com/joho/godotenv"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -15,10 +16,12 @@ var HuaweiClientId string
 var HuaweiClientSecret string
 var PublisherToken string
 var WebAppLink string
-var ApiID string
+var ApiID int
 var ApiHash string
 var IsDebug bool
 var SshIP string
+var PhoneCode string
+var PhoneUserbot string
 
 func LoadEnv() {
 	err := godotenv.Load(".env")
@@ -33,10 +36,14 @@ func LoadEnv() {
 	HuaweiClientId = os.Getenv("HUAWEI_CLIENT_ID")
 	HuaweiClientSecret = os.Getenv("HUAWEI_CLIENT_SECRET")
 	PublisherToken = os.Getenv("PUBLISHER_TOKEN")
-	ApiID = os.Getenv("API_ID")
+	apiIdTmp, _ := strconv.ParseInt(os.Getenv("API_ID"), 10, 32)
+	ApiID = int(apiIdTmp)
 	ApiHash = os.Getenv("API_HASH")
 	IsDebug = strings.Contains(os.Args[0], "tmp")
 	WebAppLink = "https://app.owlgram.org/webapp"
+	PhoneCode = os.Getenv("PHONE_CODE")
+	PhoneUserbot = os.Getenv("PHONE_USERBOT")
+
 	if IsDebug {
 		BotToken = os.Getenv("BOT_TOKEN_DEBUG")
 		WebAppLink = "https://app-test.owlgram.org/webapp"

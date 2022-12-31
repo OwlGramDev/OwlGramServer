@@ -6,6 +6,7 @@ import (
 	"OwlGramServer/http/webserver"
 	"OwlGramServer/telegram/bot"
 	"OwlGramServer/telegram/checker"
+	"OwlGramServer/telegram/emoji"
 	"OwlGramServer/updates"
 	"os"
 )
@@ -14,12 +15,14 @@ var botClient *bot.Context
 var tgChecker *checker.Context
 var crowdinClient *crowdin.Context
 var updatesClient *updates.Context
+var emojiClient *emoji.Context
 
 func main() {
 	consts.LoadEnv()
 	if _, err := os.Stat(consts.UploadsFolder); os.IsNotExist(err) {
 		_ = os.Mkdir(consts.UploadsFolder, 0775)
 	}
+	emojiClient = emoji.Client()
 	crowdinClient = crowdin.Client()
 	updatesClient = updates.Client()
 	botClient = bot.Bot(updatesClient)

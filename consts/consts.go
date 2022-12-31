@@ -33,6 +33,7 @@ const OwlGramFilesServer = "https://files.owlgram.org/"
 
 const DcCheckerCacheFile = CacheFolder + "dc_checker_cache.json"
 const ReviewsCacheFile = CacheFolder + "reviews_cache.json"
+const TelegramSessionFile = CacheFolder + "tg_session.dat"
 
 var AliasSupported = []string{"/", ";", ".", "+", "!"}
 

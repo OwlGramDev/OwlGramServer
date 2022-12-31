@@ -32,7 +32,7 @@ func (c *Context) SendApks(chatId int64) error {
 		Base     string              `json:"base"`
 		Channel  string              `json:"channel"`
 		BotToken string              `json:"bot_token"`
-		ApiId    string              `json:"api_id"`
+		ApiId    int                 `json:"api_id"`
 		ApiHash  string              `json:"api_hash"`
 		ChatID   int64               `json:"chat_id"`
 	}{
