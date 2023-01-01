@@ -6,6 +6,7 @@ import (
 )
 
 type Context struct {
-	client  *tg.Client
-	context context.Context
+	client     *tg.Client
+	context    context.Context
+	EmojiPacks []*Pack
 }

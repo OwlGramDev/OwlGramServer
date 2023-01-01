@@ -1,6 +1,7 @@
 package consts
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
 	"strconv"
@@ -15,6 +16,7 @@ var SecretDCKey string
 var HuaweiClientId string
 var HuaweiClientSecret string
 var PublisherToken string
+var ServerBase string
 var WebAppLink string
 var ApiID int
 var ApiHash string
@@ -40,13 +42,14 @@ func LoadEnv() {
 	ApiID = int(apiIdTmp)
 	ApiHash = os.Getenv("API_HASH")
 	IsDebug = strings.Contains(os.Args[0], "tmp")
-	WebAppLink = "https://app.owlgram.org/webapp"
+	ServerBase = "https://app.owlgram.org"
 	PhoneCode = os.Getenv("PHONE_CODE")
 	PhoneUserbot = os.Getenv("PHONE_USERBOT")
 
 	if IsDebug {
 		BotToken = os.Getenv("BOT_TOKEN_DEBUG")
-		WebAppLink = "https://app-test.owlgram.org/webapp"
+		ServerBase = "https://app-test.owlgram.org"
 	}
+	WebAppLink = fmt.Sprintf("%s/swebapp", ServerBase)
 	SshIP = strings.Split(os.Getenv("SSH_CLIENT"), " ")[0]
 }

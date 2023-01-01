@@ -32,6 +32,7 @@ func main() {
 	}
 
 	go botClient.Run()
+	go emojiClient.Run()
 	go crowdinClient.Run()
 	go updatesClient.Run()
 	webserver.Client(handler).Run()

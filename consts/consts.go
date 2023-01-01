@@ -71,3 +71,7 @@ const PythonLibApkSenderPath = LibsPath + "apks_sender"
 
 const AppGalleryApi = "https://connect-api.cloud.huawei.com/api/"
 const AppGalleryAppID = 105849965
+
+const TelegramXChannel = "Y2xvdWRfdGd4X2FuZHJvaWRfcmVzb3Vy"
+const GithubRepoTgX = "Telegram-X"
+const GithubRepoOwnerTgX = "TGX-Android"
