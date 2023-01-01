@@ -16,11 +16,9 @@ func EmojiPacks(ctx *fasthttp.RequestCtx, clientEmoji *emoji.Context) {
 	}
 	ctx.SetContentType("application/json")
 	ctx.SetStatusCode(fasthttp.StatusOK)
-	var result struct {
-		Packs []types.PacksInfo `json:"packs"`
-	}
+	var result []types.PacksInfo
 	for _, pack := range clientEmoji.EmojiPacks {
-		result.Packs = append(result.Packs, types.PacksInfo{
+		result = append(result, types.PacksInfo{
 			Name:    pack.DisplayName,
 			Version: pack.Version,
 			Id:      pack.Identifier,
