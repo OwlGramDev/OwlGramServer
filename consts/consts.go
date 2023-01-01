@@ -33,6 +33,7 @@ const OwlGramFilesServer = "https://files.owlgram.org/"
 
 const DcCheckerCacheFile = CacheFolder + "dc_checker_cache.json"
 const ReviewsCacheFile = CacheFolder + "reviews_cache.json"
+const TelegramSessionFile = CacheFolder + "tg_session.dat"
 
 var AliasSupported = []string{"/", ";", ".", "+", "!"}
 
@@ -70,3 +71,7 @@ const PythonLibApkSenderPath = LibsPath + "apks_sender"
 
 const AppGalleryApi = "https://connect-api.cloud.huawei.com/api/"
 const AppGalleryAppID = 105849965
+
+const TelegramXChannel = "Y2xvdWRfdGd4X2FuZHJvaWRfcmVzb3Vy"
+const GithubRepoTgX = "Telegram-X"
+const GithubRepoOwnerTgX = "TGX-Android"

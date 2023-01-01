@@ -5,6 +5,7 @@ import (
 	"OwlGramServer/github_bot"
 	"OwlGramServer/handlers"
 	"github.com/valyala/fasthttp"
+	"strings"
 )
 
 func handler(ctx *fasthttp.RequestCtx) {
@@ -13,8 +14,9 @@ func handler(ctx *fasthttp.RequestCtx) {
 		handlers.Forbidden(ctx)
 		return
 	}
+	requestedPath := string(ctx.Path())
 	if ctx.IsGet() {
-		switch string(ctx.Path()) {
+		switch requestedPath {
 		case "/get_changelogs":
 			handlers.Changelogs(ctx, updatesClient)
 		case "/version":
@@ -27,7 +29,18 @@ func handler(ctx *fasthttp.RequestCtx) {
 			handlers.LanguageVersion(ctx, crowdinClient)
 		case "/webapp":
 			handlers.WebApp(ctx, crowdinClient, botClient.TelegramClient)
+		case "/emoji_packs":
+			handlers.EmojiPacks(ctx, emojiClient)
 		default:
+			if len(requestedPath) > 14 && strings.HasPrefix(requestedPath, "/previews/") {
+				requestedPath = requestedPath[10 : len(requestedPath)-4]
+				handlers.EmojiPreview(ctx, requestedPath, emojiClient)
+				return
+			} else if len(requestedPath) > 10 && strings.HasPrefix(requestedPath, "/packs/") {
+				requestedPath = requestedPath[7 : len(requestedPath)-4]
+				handlers.EmojiFile(ctx, requestedPath, emojiClient)
+				return
+			}
 			handlers.NotFound(ctx)
 		}
 	} else if ctx.IsPost() {
