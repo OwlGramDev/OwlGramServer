@@ -32,11 +32,13 @@ func handler(ctx *fasthttp.RequestCtx) {
 		case "/emoji_packs":
 			handlers.EmojiPacks(ctx, emojiClient)
 		default:
-			if len(requestedPath) > 14 && strings.HasPrefix(requestedPath, "/previews/") {
+			if len(requestedPath) > 14 && strings.HasPrefix(requestedPath, "/previews/") &&
+				strings.HasSuffix(requestedPath, ".png") {
 				requestedPath = requestedPath[10 : len(requestedPath)-4]
 				handlers.EmojiPreview(ctx, requestedPath, emojiClient)
 				return
-			} else if len(requestedPath) > 10 && strings.HasPrefix(requestedPath, "/packs/") {
+			} else if len(requestedPath) > 10 && strings.HasPrefix(requestedPath, "/packs/") &&
+				strings.HasSuffix(requestedPath, ".zip") {
 				requestedPath = requestedPath[7 : len(requestedPath)-4]
 				handlers.EmojiFile(ctx, requestedPath, emojiClient)
 				return
