@@ -50,6 +50,6 @@ func LoadEnv() {
 		BotToken = os.Getenv("BOT_TOKEN_DEBUG")
 		ServerBase = "https://app-test.owlgram.org"
 	}
-	WebAppLink = fmt.Sprintf("%s/swebapp", ServerBase)
+	WebAppLink = fmt.Sprintf("%s/webapp", ServerBase)
 	SshIP = strings.Split(os.Getenv("SSH_CLIENT"), " ")[0]
 }
