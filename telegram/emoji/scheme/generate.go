@@ -1,8 +1,6 @@
 package scheme
 
-import (
-	"OwlGramServer/telegram/emoji/scheme/types"
-)
+import "OwlGramServer/telegram/emoji/scheme/types"
 
 func Generate() *types.NewScheme {
 	tgXScheme := loadTgXScheme()
@@ -14,15 +12,22 @@ func Generate() *types.NewScheme {
 		Columns:    tgXScheme.Columns,
 		Data:       make(map[int]map[int]*types.EmojiInfo),
 	}
-	for emoji, coords := range tgXScheme.Data {
+	for emoji, coordsTga := range tgAScheme.Data {
+		coords := tgXScheme.Data[emoji]
+		if coords == nil {
+			coords = tgXScheme.Data[tgAScheme.Alias[emoji]]
+		}
+		if coords == nil {
+			coords = tgXScheme.Data[emoji]
+		}
+		if coords == nil {
+			continue
+		}
 		if _, ok := newScheme.Data[coords.X]; !ok {
 			newScheme.Data[coords.X] = make(map[int]*types.EmojiInfo)
 		}
-		if tgAScheme[emoji] == nil {
-			continue
-		}
 		newScheme.Data[coords.X][coords.Y] = &types.EmojiInfo{
-			Coordinates: tgAScheme[emoji],
+			Coordinates: coordsTga,
 			Emoji:       emoji,
 		}
 	}

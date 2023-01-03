@@ -79,26 +79,29 @@ func (e *Pack) BuildPack(schemeLayout *types.NewScheme) {
 func (e *Pack) mapSprites(schemeLayout *types.NewScheme) map[string]*sprite {
 	emojiSprites := make(map[string]*sprite)
 	emojiOriginalSize := int(30 * schemeLayout.Scale)
-	for x := 0; x < len(schemeLayout.Data); x++ {
-		count2 := int(math.Ceil(float64(len(schemeLayout.Data[x])) / float64(schemeLayout.SplitCount)))
-		for y := 0; y < len(schemeLayout.Data[x]); y++ {
-			emoji := schemeLayout.Data[x][y]
-			if emoji == nil {
-				continue
+	for sectionIndex := range schemeLayout.Data {
+		var biggestSize int
+		for emojiIndex := range schemeLayout.Data[sectionIndex] {
+			if emojiIndex > biggestSize {
+				biggestSize = emojiIndex
 			}
-			page := y / count2
-			position := y - page*count2
-			row := position % schemeLayout.Columns[x][page]
-			col := position / schemeLayout.Columns[x][page]
+		}
+		count2 := int(math.Ceil(float64(biggestSize) / float64(schemeLayout.SplitCount)))
+		for emojiIndex := range schemeLayout.Data[sectionIndex] {
+			emoji := schemeLayout.Data[sectionIndex][emojiIndex]
+			page := emojiIndex / count2
+			position := emojiIndex - page*count2
+			row := position % schemeLayout.Columns[sectionIndex][page]
+			col := position / schemeLayout.Columns[sectionIndex][page]
 
-			margin := int(float64(schemeLayout.Margins[x][page]) * schemeLayout.Scale)
+			margin := int(float64(schemeLayout.Margins[sectionIndex][page]) * schemeLayout.Scale)
 			marginLeft := margin * row
 			marginTop := margin * col
 
 			left := row*emojiOriginalSize + marginLeft
 			top := col*emojiOriginalSize + marginTop
 			emojiSprites[emoji.Emoji] = &sprite{
-				SectionIndex: x,
+				SectionIndex: sectionIndex,
 				Page:         page,
 				Rect:         image.Rect(left, top, left+emojiOriginalSize, top+emojiOriginalSize),
 				Coordinates:  emoji.Coordinates,
