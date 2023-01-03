@@ -7,4 +7,5 @@ type PacksInfo struct {
 	Preview  string `json:"preview"`
 	File     string `json:"file"`
 	FileSize int    `json:"file_size"`
+	MD5      string `json:"md5"`
 }

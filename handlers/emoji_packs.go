@@ -23,8 +23,9 @@ func EmojiPacks(ctx *fasthttp.RequestCtx, clientEmoji *emoji.Context) {
 			Version:  pack.Version,
 			Id:       pack.Identifier,
 			Preview:  fmt.Sprintf("%s/previews/%s.png?v=%d", consts.ServerBase, pack.Identifier, pack.Version),
-			File:     fmt.Sprintf("%s/packs/%s.zip?v=%d", consts.ServerBase, pack.Identifier, pack.Version),
+			File:     fmt.Sprintf("%s/packs/%s.zip?v=%s", consts.ServerBase, pack.Identifier, pack.MD5),
 			FileSize: len(pack.Emojies),
+			MD5:      pack.MD5,
 		})
 	}
 	res, _ := json.Marshal(result)

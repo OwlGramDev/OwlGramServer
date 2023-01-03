@@ -5,6 +5,8 @@ import (
 	"OwlGramServer/utilities"
 	"archive/zip"
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"github.com/gotd/td/tg"
 	"image"
@@ -22,6 +24,7 @@ type Pack struct {
 	Identifier  string
 	Preview     []byte
 	Emojies     []byte
+	MD5         string
 	previewDoc  *tg.MessageMediaDocument
 	emojiesDoc  *tg.MessageMediaDocument
 }
@@ -131,6 +134,8 @@ func (e *Pack) zipEmojis(emojiAsset map[string][]byte, sprites map[string]*sprit
 	}
 	_ = w.Close()
 	e.Emojies = buf.Bytes()
+	byteSum := sha256.Sum256(e.Emojies)
+	e.MD5 = hex.EncodeToString(byteSum[:])
 }
 
 func (e *Pack) unpackAsset() map[string][]byte {
