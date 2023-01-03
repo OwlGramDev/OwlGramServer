@@ -6,6 +6,7 @@ import (
 	"OwlGramServer/utilities"
 	"github.com/gotd/td/tg"
 	"github.com/gotd/td/tgerr"
+	"sort"
 	"sync"
 	"time"
 )
@@ -47,6 +48,9 @@ func (c *Context) Run() {
 				}(p)
 			}
 			waitUntil.Wait()
+			sort.Slice(emojiPacks, func(i, j int) bool {
+				return emojiPacks[i].DisplayName < emojiPacks[j].DisplayName
+			})
 			c.EmojiPacks = emojiPacks
 		}
 		time.Sleep(time.Minute * 30)
