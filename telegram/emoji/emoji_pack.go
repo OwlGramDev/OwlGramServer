@@ -80,20 +80,16 @@ func (e *Pack) mapSprites(schemeLayout *types.NewScheme) map[string]*sprite {
 	emojiSprites := make(map[string]*sprite)
 	emojiOriginalSize := int(30 * schemeLayout.Scale)
 	for sectionIndex := range schemeLayout.Data {
-		var biggestSize int
-		for emojiIndex := range schemeLayout.Data[sectionIndex] {
-			if emojiIndex > biggestSize {
-				biggestSize = emojiIndex
-			}
-		}
-		count2 := int(math.Ceil(float64(biggestSize) / float64(schemeLayout.SplitCount)))
+		count2 := int(math.Ceil(float64(len(schemeLayout.Data[sectionIndex])) / float64(schemeLayout.SplitCount)))
 		for emojiIndex := range schemeLayout.Data[sectionIndex] {
 			emoji := schemeLayout.Data[sectionIndex][emojiIndex]
+			if emoji == nil {
+				continue
+			}
 			page := emojiIndex / count2
 			position := emojiIndex - page*count2
 			row := position % schemeLayout.Columns[sectionIndex][page]
 			col := position / schemeLayout.Columns[sectionIndex][page]
-
 			margin := int(float64(schemeLayout.Margins[sectionIndex][page]) * schemeLayout.Scale)
 			marginLeft := margin * row
 			marginTop := margin * col
