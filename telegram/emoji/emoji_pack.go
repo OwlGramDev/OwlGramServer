@@ -134,7 +134,8 @@ func (e *Pack) zipEmojis(emojiAsset map[string][]byte, sprites map[string]*sprit
 	}
 	_ = w.Close()
 	e.Emojies = buf.Bytes()
-	byteSum := sha256.Sum256(e.Emojies)
+	packIdentifier := fmt.Sprintf("%d%d%d%d", len(sprites), len(assets), len(e.Emojies), e.Version)
+	byteSum := sha256.Sum256([]byte(packIdentifier))
 	e.MD5 = hex.EncodeToString(byteSum[:])
 }
 
