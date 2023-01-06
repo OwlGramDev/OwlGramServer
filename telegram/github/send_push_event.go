@@ -1,9 +1,9 @@
-package github_bot
+package github
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/github_bot/types"
 	"OwlGramServer/handlers"
+	"OwlGramServer/telegram/github/types"
 	"encoding/json"
 	"fmt"
 	"github.com/Squirrel-Network/gobotapi"

@@ -1,7 +1,7 @@
 package reviews
 
 import (
-	"OwlGramServer/google_reviews"
+	"OwlGramServer/telegram/google_reviews"
 	"github.com/Squirrel-Network/gobotapi"
 )
 

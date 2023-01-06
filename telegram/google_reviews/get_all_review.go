@@ -2,7 +2,7 @@ package google_reviews
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/google_reviews/types"
+	"OwlGramServer/telegram/google_reviews/types"
 	"fmt"
 	"regexp"
 )

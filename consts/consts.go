@@ -1,6 +1,6 @@
 package consts
 
-import "OwlGramServer/github_bot/types"
+import "OwlGramServer/telegram/github/types"
 
 const BasePathOwlGram = "/home/owlgram/"
 const BaseWWWPath = "/var/www/"
