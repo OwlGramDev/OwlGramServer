@@ -70,6 +70,12 @@ const BundleToolPath = LibsPath + "bundletool-all-1.9.1.jar"
 const AAPT2ToolPath = LibsPath + "aapt2"
 const RetraceToolPath = LibsPath + "proguard-retrace-6.0.3.jar"
 const PythonLibApkSenderPath = LibsPath + "apks_sender"
+const VenvPath = LibsPath + "venv/"
+
+var Requirements = []string{
+	"pyrogram",
+	"tgcrypto",
+}
 
 const AppGalleryApi = "https://connect-api.cloud.huawei.com/api/"
 const AppGalleryAppID = 105849965
@@ -77,10 +83,3 @@ const AppGalleryAppID = 105849965
 const TelegramXChannel = "Y2xvdWRfdGd4X2FuZHJvaWRfcmVzb3Vy"
 const GithubRepoTgX = "Telegram-X"
 const GithubRepoOwnerTgX = "TGX-Android"
-
-const VenvPath = LibsPath + "venv/"
-
-var Requirements = []string{
-	"pyrogram",
-	"tgcrypto",
-}

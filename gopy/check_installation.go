@@ -6,7 +6,7 @@ import (
 )
 
 func (c *Context) CheckInstallation(packages ...string) bool {
-	res, err := c.runWithVenv(fmt.Sprintf("pip freeze | grep -i -E '%s'", strings.Join(packages, "|")))
+	res, err := c.runWithVenv(nil, fmt.Sprintf("pip freeze | grep -i -E '%s'", strings.Join(packages, "|")))
 	if err != nil {
 		return false
 	}

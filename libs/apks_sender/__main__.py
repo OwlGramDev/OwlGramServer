@@ -15,7 +15,7 @@ async def __main__():
     cache_path = os.path.join(current_path, "cache")
     if not os.path.exists(cache_path):
         os.mkdir(cache_path)
-    data = json.loads(bytes.fromhex(sys.argv[1]).decode('utf-8'))
+    data = json.loads(sys.stdin.read())
     utils = Utils(current_path)
     client = Client('OwlGram', data['api_id'], data['api_hash'], bot_token=data['bot_token'])
     await client.start()
