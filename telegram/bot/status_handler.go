@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/Squirrel-Network/gobotapi/methods"
 	"github.com/Squirrel-Network/gobotapi/types"
-	"github.com/google/go-github/v43/github"
+	"github.com/google/go-github/v45/github"
 	"regexp"
 	"sort"
 	"strings"

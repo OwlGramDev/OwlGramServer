@@ -2,8 +2,8 @@ package main
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/github_bot"
 	"OwlGramServer/handlers"
+	"OwlGramServer/telegram/github"
 	"github.com/valyala/fasthttp"
 	"strings"
 )
@@ -52,7 +52,7 @@ func handler(ctx *fasthttp.RequestCtx) {
 		case "/notify_upload":
 			handlers.NotifyUpload(ctx, botClient)
 		case "/notify_github":
-			github_bot.SendPushEvent(ctx)
+			github.SendPushEvent(ctx)
 		default:
 			handlers.NotFound(ctx)
 			break

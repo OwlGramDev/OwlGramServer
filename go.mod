@@ -6,14 +6,14 @@ require (
 	github.com/Squirrel-Network/gobotapi v1.4.5
 	github.com/bradleyfalzon/ghinstallation/v2 v2.1.0
 	github.com/flosch/pongo2 v0.0.0-20200913210552-0d938eb266f3
-	github.com/google/go-github/v43 v43.0.0
+	github.com/google/go-github/v45 v45.2.0
 	github.com/gotd/td v0.75.0
 	github.com/joho/godotenv v1.4.0
 	github.com/valyala/fasthttp v1.43.0
 	golang.org/x/crypto v0.4.0
 	golang.org/x/exp v0.0.0-20221230185412-738e83a70c30
 	golang.org/x/net v0.4.0
-	golang.org/x/text v0.5.0
+	golang.org/x/text v0.6.0
 	google.golang.org/api v0.105.0
 )
 
@@ -28,7 +28,6 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-github/v45 v45.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
