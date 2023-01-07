@@ -3,6 +3,7 @@ package bot
 import (
 	"OwlGramServer/compiler"
 	"OwlGramServer/consts"
+	"OwlGramServer/gopy"
 	"OwlGramServer/stores"
 	"OwlGramServer/telegram/bot/reviews"
 	"OwlGramServer/updates"
@@ -11,7 +12,7 @@ import (
 	"os"
 )
 
-func Bot(updateClient *updates.Context) *Context {
+func Bot(updateClient *updates.Context, pythonClient *gopy.Context) *Context {
 	client := gobotapi.NewClient(consts.BotToken)
 	client.SleepThreshold = 120
 	if consts.IsDebug {
@@ -31,5 +32,6 @@ func Bot(updateClient *updates.Context) *Context {
 		CompilerClient: compiler.Client(),
 		StoreClient:    stores.Client(updateClient),
 		UpdateClient:   updateClient,
+		pythonClient:   pythonClient,
 	}
 }

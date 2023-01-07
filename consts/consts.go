@@ -1,6 +1,8 @@
 package consts
 
-import "OwlGramServer/telegram/github/types"
+import (
+	"OwlGramServer/telegram/github/types"
+)
 
 const BasePathOwlGram = "/home/owlgram/"
 const BaseWWWPath = "/var/www/"
@@ -75,3 +77,10 @@ const AppGalleryAppID = 105849965
 const TelegramXChannel = "Y2xvdWRfdGd4X2FuZHJvaWRfcmVzb3Vy"
 const GithubRepoTgX = "Telegram-X"
 const GithubRepoOwnerTgX = "TGX-Android"
+
+const VenvPath = LibsPath + "venv/"
+
+var Requirements = []string{
+	"pyrogram",
+	"tgcrypto",
+}

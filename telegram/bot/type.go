@@ -2,6 +2,7 @@ package bot
 
 import (
 	"OwlGramServer/compiler"
+	"OwlGramServer/gopy"
 	"OwlGramServer/stores"
 	"OwlGramServer/telegram/bot/reviews"
 	"OwlGramServer/updates"
@@ -24,4 +25,5 @@ type Context struct {
 	ReleaseBase      string
 	CurrentStatus    int
 	SendingApks      bool
+	pythonClient     *gopy.Context
 }

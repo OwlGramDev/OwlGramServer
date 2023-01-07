@@ -4,13 +4,8 @@ import (
 	"OwlGramServer/compiler"
 	"OwlGramServer/compiler/types"
 	"OwlGramServer/consts"
-	"bytes"
-	"encoding/hex"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"os/exec"
-	"strings"
+	typesBot "OwlGramServer/telegram/bot/types"
+	"path"
 )
 
 func (c *Context) SendApks(chatId int64) error {
@@ -27,36 +22,17 @@ func (c *Context) SendApks(chatId int64) error {
 			})
 		}
 	}
-	marshal, _ := json.Marshal(struct {
-		Apks     []types.PackageInfo `json:"apks"`
-		Base     string              `json:"base"`
-		Channel  string              `json:"channel"`
-		BotToken string              `json:"bot_token"`
-		ApiId    int                 `json:"api_id"`
-		ApiHash  string              `json:"api_hash"`
-		ChatID   int64               `json:"chat_id"`
-	}{
-		Apks:     listApkInfo,
-		Base:     c.ReleaseBase,
-		Channel:  c.ReleaseType,
-		BotToken: consts.BotToken,
-		ApiId:    consts.ApiID,
-		ApiHash:  consts.ApiHash,
-		ChatID:   chatId,
-	})
-	var errMess bytes.Buffer
-	cmd := exec.Command("bash", "-c", strings.Join([]string{
-		"source env/bin/activate",
-		fmt.Sprintf("python3.10 __main__.py %s", hex.EncodeToString(marshal)),
-	}, " && "))
-	cmd.Dir = consts.PythonLibApkSenderPath
-	cmd.Stderr = &errMess
-	_, err := cmd.Output()
-	if err != nil {
-		if errMess.Len() > 0 {
-			return errors.New(errMess.String())
-		}
-		return err
-	}
-	return nil
+	_, err := c.pythonClient.Run(
+		path.Join(consts.PythonLibApkSenderPath, "__main__.py"),
+		typesBot.PythonParams{
+			Apks:     listApkInfo,
+			Base:     c.ReleaseBase,
+			Channel:  c.ReleaseType,
+			BotToken: consts.BotToken,
+			ApiId:    consts.ApiID,
+			ApiHash:  consts.ApiHash,
+			ChatID:   chatId,
+		},
+	)
+	return err
 }
