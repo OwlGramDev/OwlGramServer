@@ -6,4 +6,5 @@ type PackTMP struct {
 	Preview     []byte
 	Emojies     []byte
 	MD5         string
+	Version     int
 }

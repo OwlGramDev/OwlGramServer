@@ -8,26 +8,29 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"golang.org/x/exp/slices"
 	"image"
 	"image/draw"
 	"image/png"
 )
 
-func buildSprites(appleEmoji map[int]map[int][]byte, schemeLayout *typeScheme.NewScheme, data []*types.FileDescriptor) ([]*types.PackTMP, error) {
+func buildSprites(version int, appleEmoji map[int]map[int][]byte, schemeLayout *typeScheme.NewScheme, data []*types.FileDescriptor) ([]*types.PackTMP, error) {
 	var packs []*types.PackTMP
 	for _, file := range data {
 		e := &types.PackTMP{
 			DisplayName: file.Name,
 			Identifier:  file.ID,
+			Version:     version,
 		}
 		var buf bytes.Buffer
 		w := zip.NewWriter(&buf)
-		previewsEmojis := map[string]image.Image{
-			"😀": nil,
-			"😉": nil,
-			"😔": nil,
-			"😨": nil,
+		listPreview := []string{
+			"😀",
+			"😉",
+			"😔",
+			"😨",
 		}
+		previewsEmojis := make(map[string]image.Image)
 		var totalItem int
 		for page, pageData := range schemeLayout.Data {
 			for section, s := range pageData {
@@ -46,7 +49,7 @@ func buildSprites(appleEmoji map[int]map[int][]byte, schemeLayout *typeScheme.Ne
 				}
 				f, _ := w.Create(fileName)
 				_, _ = f.Write(sprite)
-				if _, ok := previewsEmojis[s.Emoji]; ok {
+				if slices.Contains(listPreview, s.Emoji) {
 					if sprite == nil {
 						return nil, fmt.Errorf("sprite is nil")
 					}
@@ -58,16 +61,15 @@ func buildSprites(appleEmoji map[int]map[int][]byte, schemeLayout *typeScheme.Ne
 		e.Emojies = buf.Bytes()
 
 		previewImage := image.NewRGBA(image.Rect(0, 0, 132, 132))
-		curr := 0
 		emojiSize := 66
-		for _, preview := range previewsEmojis {
+		for i, emoji := range listPreview {
+			preview := previewsEmojis[emoji]
 			if preview == nil {
 				return nil, fmt.Errorf("preview is nil")
 			}
-			x := (curr % 2) * emojiSize
-			y := (curr / 2) * emojiSize
+			x := (i % 2) * emojiSize
+			y := (i / 2) * emojiSize
 			draw.Draw(previewImage, image.Rect(x, y, x+emojiSize, y+emojiSize), preview, image.Point{}, draw.Src)
-			curr++
 		}
 		var buffer bytes.Buffer
 		_ = png.Encode(&buffer, previewImage)

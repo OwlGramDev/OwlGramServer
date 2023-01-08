@@ -55,7 +55,7 @@ func (c *Context) Run() {
 					applePack = p
 				}
 			}
-			sets, errBuild := github.BuildSets(applePack.RawEmoji, schemeLayout, c.pythonClient)
+			sets, errBuild := github.BuildSets(applePack.Version, applePack.RawEmoji, schemeLayout, c.pythonClient)
 			if errBuild == nil {
 				for _, p := range sets {
 					emojiPacks = append(emojiPacks, &Pack{
@@ -64,6 +64,7 @@ func (c *Context) Run() {
 						Preview:     p.Preview,
 						Emojies:     p.Emojies,
 						MD5:         p.MD5,
+						Version:     p.Version,
 					})
 				}
 			}
