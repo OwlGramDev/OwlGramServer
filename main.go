@@ -28,7 +28,7 @@ func main() {
 	}
 	_ = exec.Command("chmod", "+x", consts.AAPT2ToolPath).Run()
 	pythonClient = utilities.SmartPythonBuild()
-	emojiClient = emoji.Client()
+	emojiClient = emoji.Client(pythonClient)
 	crowdinClient = crowdin.Client()
 	updatesClient = updates.Client()
 	botClient = bot.Bot(updatesClient, pythonClient)

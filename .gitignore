@@ -4,3 +4,4 @@
 .idea
 libs/apks_sender/output.jpg
 config/*
+libs/pillow/test*

@@ -1,6 +1,6 @@
 package types
 
 type EmojiInfo struct {
-	Coordinates *Coordinates
-	Emoji       string
+	Coordinates *Coordinates `json:"coordinates"`
+	Emoji       string       `json:"emoji"`
 }

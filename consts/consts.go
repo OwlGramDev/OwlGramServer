@@ -1,6 +1,7 @@
 package consts
 
 import (
+	githubTypes "OwlGramServer/telegram/emoji/github/types"
 	"OwlGramServer/telegram/github/types"
 )
 
@@ -70,11 +71,13 @@ const BundleToolPath = LibsPath + "bundletool-all-1.9.1.jar"
 const AAPT2ToolPath = LibsPath + "aapt2"
 const RetraceToolPath = LibsPath + "proguard-retrace-6.0.3.jar"
 const PythonLibApkSenderPath = LibsPath + "apks_sender"
+const PythonLibPillow = LibsPath + "pillow"
 const VenvPath = LibsPath + "venv/"
 
 var Requirements = []string{
 	"pyrogram",
 	"tgcrypto",
+	"pillow",
 }
 
 const AppGalleryApi = "https://connect-api.cloud.huawei.com/api/"
@@ -83,3 +86,21 @@ const AppGalleryAppID = 105849965
 const TelegramXChannel = "Y2xvdWRfdGd4X2FuZHJvaWRfcmVzb3Vy"
 const GithubRepoTgX = "Telegram-X"
 const GithubRepoOwnerTgX = "TGX-Android"
+
+const GithubRepoZFont = "zFont_Fonts"
+const GithubRepoOwnerZFont = "KhunHtetzNaing"
+
+var WhiteListFont = []githubTypes.EmojiInfo{
+	{
+		Name:      "Facebook",
+		MatchName: "facebook",
+	},
+	{
+		Name:      "WhatsApp",
+		MatchName: "what",
+	},
+	{
+		Name:      "Fluent (by Microsoft)",
+		MatchName: "windows_3d",
+	},
+}

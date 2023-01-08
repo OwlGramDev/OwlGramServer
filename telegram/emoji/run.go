@@ -2,6 +2,7 @@ package emoji
 
 import (
 	"OwlGramServer/consts"
+	"OwlGramServer/telegram/emoji/github"
 	"OwlGramServer/telegram/emoji/scheme"
 	"OwlGramServer/utilities"
 	"github.com/gotd/td/tg"
@@ -48,6 +49,24 @@ func (c *Context) Run() {
 				}(p)
 			}
 			waitUntil.Wait()
+			var applePack *Pack
+			for _, p := range emojiPacks {
+				if p.Identifier == "apple" {
+					applePack = p
+				}
+			}
+			sets, errBuild := github.BuildSets(applePack.RawEmoji, schemeLayout, c.pythonClient)
+			if errBuild == nil {
+				for _, p := range sets {
+					emojiPacks = append(emojiPacks, &Pack{
+						DisplayName: p.DisplayName,
+						Identifier:  p.Identifier,
+						Preview:     p.Preview,
+						Emojies:     p.Emojies,
+						MD5:         p.MD5,
+					})
+				}
+			}
 			sort.Slice(emojiPacks, func(i, j int) bool {
 				return emojiPacks[i].DisplayName < emojiPacks[j].DisplayName
 			})

@@ -1,5 +1,6 @@
 package types
 
 type Coordinates struct {
-	X, Y int
+	X int `json:"x"`
+	Y int `json:"y"`
 }

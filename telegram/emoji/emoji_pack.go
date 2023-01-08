@@ -25,6 +25,7 @@ type Pack struct {
 	Preview     []byte
 	Emojies     []byte
 	MD5         string
+	RawEmoji    map[int]map[int][]byte
 	previewDoc  *tg.MessageMediaDocument
 	emojiesDoc  *tg.MessageMediaDocument
 }
@@ -123,14 +124,20 @@ func (e *Pack) zipEmojis(emojiAsset map[string][]byte, sprites map[string]*sprit
 	}
 	var buf bytes.Buffer
 	w := zip.NewWriter(&buf)
+	e.RawEmoji = make(map[int]map[int][]byte)
 	for _, s := range sprites {
 		img := assets[s.SectionIndex][s.Page]
 		emojiImage := img.(*image.Paletted).SubImage(s.Rect)
 		var buffer bytes.Buffer
 		_ = png.Encode(&buffer, emojiImage)
+		if e.RawEmoji[s.Coordinates.X] == nil {
+			e.RawEmoji[s.Coordinates.X] = make(map[int][]byte)
+		}
+		output := buffer.Bytes()
+		e.RawEmoji[s.Coordinates.X][s.Coordinates.Y] = output
 		fileName := fmt.Sprintf("%d_%d.png", s.Coordinates.X, s.Coordinates.Y)
 		f, _ := w.Create(fileName)
-		_, _ = f.Write(buffer.Bytes())
+		_, _ = f.Write(output)
 	}
 	_ = w.Close()
 	e.Emojies = buf.Bytes()

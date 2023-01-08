@@ -2,6 +2,7 @@ package emoji
 
 import (
 	"OwlGramServer/consts"
+	"OwlGramServer/gopy"
 	"context"
 	"fmt"
 	"github.com/gotd/td/telegram"
@@ -9,7 +10,7 @@ import (
 	"time"
 )
 
-func Client() *Context {
+func Client(pythonClient *gopy.Context) *Context {
 	session := &memorySession{}
 	botClient := telegram.NewClient(consts.ApiID, consts.ApiHash, telegram.Options{
 		NoUpdates:      true,
@@ -27,8 +28,9 @@ func Client() *Context {
 				return err
 			}
 			client = &Context{
-				client:  botClient.API(),
-				context: ctx,
+				client:       botClient.API(),
+				context:      ctx,
+				pythonClient: pythonClient,
 			}
 			waitClient <- true
 			for {
