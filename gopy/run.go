@@ -10,5 +10,5 @@ func (c *Context) Run(path string, params any) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return c.runWithVenv(marshal, fmt.Sprintf("python3 %s", path))
+	return c.runWithVenv(marshal, fmt.Sprintf("python %s", path))
 }
