@@ -16,9 +16,8 @@ func loadTgAScheme() *types.TgAScheme {
 		consts.GithubRepoOwner,
 		consts.GithubRepo,
 	)
-	res, _ := http.ExecuteRequest(linkFile)
 	compile, _ := regexp.Compile(`new .*\[]`)
-	output := compile.ReplaceAllString(string(res), "")
+	output := compile.ReplaceAllString(http.ExecuteRequest(linkFile).ReadString(), "")
 	compile, _ = regexp.Compile(`public.*static.*\s(\w+).=\s(\{[^]]*}|.*);`)
 	a := compile.FindAllStringSubmatch(output, -1)
 	var rawMap [][]string

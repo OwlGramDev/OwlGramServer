@@ -35,7 +35,7 @@ func GetLatestEmojis() []*types.FileDescriptor {
 		}
 	}
 	for _, file := range emojiFonts {
-		file.Content, _ = customHttp.ExecuteRequest(file.DownloadURL)
+		file.Content = customHttp.ExecuteRequest(file.DownloadURL).Read()
 	}
 	return emojiFonts
 }

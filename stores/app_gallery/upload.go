@@ -28,7 +28,7 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 		ClientSecret: consts.HuaweiClientSecret,
 		GrantType:    "client_credentials",
 	})
-	res, err := http.ExecuteRequest(
+	res := http.ExecuteRequest(
 		fmt.Sprintf("%soauth2/v1/token", consts.AppGalleryApi),
 		http.Method("POST"),
 		http.Headers(map[string]string{
@@ -36,13 +36,13 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 		}),
 		http.Body(marshal),
 	)
-	if err != nil {
-		fmt.Println(err)
+	if res.Error != nil {
+		fmt.Println(res.Error)
 		listener(-1)
 		return
 	}
 	var authToken types.AuthToken
-	err = json.Unmarshal(res, &authToken)
+	err := json.Unmarshal(res.Read(), &authToken)
 	if err != nil {
 		listener(-1)
 		return
@@ -52,7 +52,7 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 			Lang:        "en-US",
 			NewFeatures: descriptionUpdate,
 		})
-		res, err = http.ExecuteRequest(
+		res = http.ExecuteRequest(
 			fmt.Sprintf("%spublish/v2/app-language-info?appId=%d", consts.AppGalleryApi, consts.AppGalleryAppID),
 			http.Method("PUT"),
 			http.BearerToken(authToken.AccessToken),
@@ -62,12 +62,12 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 			}),
 			http.Body(marshal),
 		)
-		if err != nil {
+		if res.Error != nil {
 			listener(-1)
 			return
 		}
 	}
-	res, err = http.ExecuteRequest(
+	res = http.ExecuteRequest(
 		fmt.Sprintf("%spublish/v2/upload-url?appId=%d&suffix=apk", consts.AppGalleryApi, consts.AppGalleryAppID),
 		http.Method("GET"),
 		http.BearerToken(authToken.AccessToken),
@@ -75,12 +75,12 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 			"client_id": consts.HuaweiClientId,
 		}),
 	)
-	if err != nil {
+	if res.Error != nil {
 		listener(-1)
 		return
 	}
 	var uploadUrl types.UploadUrl
-	err = json.Unmarshal(res, &uploadUrl)
+	err = json.Unmarshal(res.Read(), &uploadUrl)
 	if err != nil {
 		listener(-1)
 		return
@@ -90,7 +90,7 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 		listener(-1)
 		return
 	}
-	res, err = http.ExecuteRequest(
+	res = http.ExecuteRequest(
 		uploadUrl.UploadUrl,
 		http.Method("POST"),
 		http.MultiPartForm(
@@ -106,13 +106,13 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 			}),
 		),
 	)
-	if err != nil {
+	if res.Error != nil {
 		listener(-1)
 		return
 	}
 	listener(100)
 	var uploadResult types.UploadResult
-	err = json.Unmarshal(res, &uploadResult)
+	err = json.Unmarshal(res.Read(), &uploadResult)
 	if err != nil {
 		listener(-1)
 		return
@@ -131,7 +131,7 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 		Lang:     "en-US",
 	}
 	marshal, _ = json.Marshal(appFileInfo)
-	res, err = http.ExecuteRequest(
+	res = http.ExecuteRequest(
 		fmt.Sprintf("%spublish/v2/app-file-info?appId=%d", consts.AppGalleryApi, consts.AppGalleryAppID),
 		http.Method("PUT"),
 		http.BearerToken(authToken.AccessToken),
@@ -141,14 +141,14 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 		}),
 		http.Body(marshal),
 	)
-	if err != nil {
+	if res.Error != nil {
 		listener(-1)
 		return
 	}
 	sentCorrectly := false
 	listener(-3)
 	for {
-		res, err = http.ExecuteRequest(
+		res = http.ExecuteRequest(
 			fmt.Sprintf("%spublish/v2/app-submit?appid=%d", consts.AppGalleryApi, consts.AppGalleryAppID),
 			http.Method("POST"),
 			http.BearerToken(authToken.AccessToken),
@@ -157,11 +157,11 @@ func Upload(apk bundles.PackageInfo, descriptionUpdate string, listener func(flo
 				"client_id":    consts.HuaweiClientId,
 			}),
 		)
-		if err != nil {
+		if res.Error != nil {
 			return
 		}
 		var submitResult types.SubmitResult
-		_ = json.Unmarshal(res, &submitResult)
+		_ = json.Unmarshal(res.Read(), &submitResult)
 		if submitResult.Ret.Code == 204144727 {
 			time.Sleep(time.Second * 1)
 		} else if submitResult.Ret.Code == 0 {

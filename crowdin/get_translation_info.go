@@ -9,20 +9,20 @@ import (
 )
 
 func (ctx *Context) GetTranslationInfo(languageId string) (map[string]types.StringInfo, error) {
-	r, err := http.ExecuteRequest(
+	r := http.ExecuteRequest(
 		fmt.Sprintf("%s%s/languages/%s/translations?limit=500", consts.CrowdinApiLink, consts.CrowdinProjectId, languageId),
 		http.BearerToken(consts.CrowdinAuthToken),
 		http.Retries(3),
 	)
-	if err != nil {
-		return nil, err
+	if r.Error != nil {
+		return nil, r.Error
 	}
 	var result struct {
 		Data []struct {
 			Data types.StringInfo `json:"data"`
 		} `json:"data"`
 	}
-	err = json.Unmarshal(r, &result)
+	err := json.Unmarshal(r.Read(), &result)
 	if err != nil {
 		return nil, err
 	}

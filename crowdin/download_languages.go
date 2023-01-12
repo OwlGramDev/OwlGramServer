@@ -11,7 +11,7 @@ import (
 )
 
 func (ctx *Context) downloadLanguages() {
-	listLanguagesRaw, _ := http.ExecuteRequest(
+	listLanguagesRaw := http.ExecuteRequest(
 		fmt.Sprintf("%s%s", consts.CrowdinApiLink, consts.CrowdinProjectId),
 		http.BearerToken(consts.CrowdinAuthToken),
 		http.Retries(3),
@@ -24,18 +24,18 @@ func (ctx *Context) downloadLanguages() {
 			} `json:"data"`
 		} `json:"data"`
 	}
-	r, _ := http.ExecuteRequest(
+	r := http.ExecuteRequest(
 		fmt.Sprintf("%s%s/strings?limit=500", consts.CrowdinApiLink, consts.CrowdinProjectId),
 		http.BearerToken(consts.CrowdinAuthToken),
 		http.Retries(3),
 	)
-	err := json.Unmarshal(r, &languageIdentifiers)
+	err := json.Unmarshal(r.Read(), &languageIdentifiers)
 	if err != nil {
 		return
 	}
-	if listLanguagesRaw != nil && err == nil && r != nil {
+	if listLanguagesRaw.Read() != nil && err == nil && r.Read() != nil {
 		var projectMain types.ProjectInfo
-		_ = json.Unmarshal(listLanguagesRaw, &projectMain)
+		_ = json.Unmarshal(listLanguagesRaw.Read(), &projectMain)
 		ctx.LanguagesList = projectMain.Data.TargetLanguages
 		ctx.SourceStrings = make(map[int]string)
 		for _, language := range languageIdentifiers.Data {

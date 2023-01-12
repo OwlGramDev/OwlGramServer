@@ -12,7 +12,7 @@ func (ctx *Context) ApproveString(translationId int) {
 	marshal, _ := json.Marshal(map[string]int{
 		"translationId": translationId,
 	})
-	_, err := http.ExecuteRequest(
+	res := http.ExecuteRequest(
 		fmt.Sprintf("%s%s/approvals", consts.CrowdinApiLink, consts.CrowdinProjectId),
 		http.Method("POST"),
 		http.Body(marshal),
@@ -22,7 +22,7 @@ func (ctx *Context) ApproveString(translationId int) {
 		}),
 		http.Retries(3),
 	)
-	if err != nil {
+	if res.Error != nil {
 		return
 	}
 	for i, translation := range ctx.DownloadedLanguages {

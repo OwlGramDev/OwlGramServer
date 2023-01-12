@@ -45,8 +45,7 @@ func (ctx *Context) GetChangelogUpdate(version string, lang string, ignoreChecks
 		cache = ctx.getCacheContent(cacheId+langStyle, version)
 	}
 	if cache == nil {
-		result, _ := http.ExecuteRequest(linkChannel)
-		tmpResult := string(result)
+		tmpResult := http.ExecuteRequest(linkChannel).ReadString()
 		cache = &tmpResult
 		if !ignoreChecks {
 			ctx.setCacheContent(cacheId+langStyle, version, tmpResult)
@@ -60,8 +59,7 @@ func (ctx *Context) GetChangelogUpdate(version string, lang string, ignoreChecks
 		cacheBeta = ctx.getCacheContent(cacheBetaId, version)
 	}
 	if cacheBeta == nil {
-		result, _ := http.ExecuteRequest(consts.OwlGramTGChannelBetaLink)
-		tmpResult := string(result)
+		tmpResult := http.ExecuteRequest(consts.OwlGramTGChannelBetaLink).ReadString()
 		cacheBeta = &tmpResult
 		if !ignoreChecks {
 			ctx.setCacheContent(cacheBetaId, version, tmpResult)

@@ -8,7 +8,7 @@ import (
 )
 
 func (ctx *Context) DeleteString(translationId int) {
-	_, _ = http.ExecuteRequest(
+	_ = http.ExecuteRequest(
 		fmt.Sprintf("%s%s/translations/%d", consts.CrowdinApiLink, consts.CrowdinProjectId, translationId),
 		http.BearerToken(consts.CrowdinAuthToken),
 		http.Method("DELETE"),

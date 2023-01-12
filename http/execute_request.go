@@ -10,13 +10,15 @@ import (
 	"time"
 )
 
-func ExecuteRequest(url string, options ...RequestOption) ([]byte, error) {
+func ExecuteRequest(url string, options ...RequestOption) *types.HTTPResult {
 	var opt types.RequestOptions
+	bodyRes := &types.HTTPResult{}
 	for _, option := range options {
 		option.Apply(&opt)
 	}
 	if (opt.MultiPart != nil) == (opt.Body != nil) && opt.MultiPart != nil {
-		return nil, fmt.Errorf("must specify either multipart or body")
+		bodyRes.Error = fmt.Errorf("can't use multipart and body at the same time")
+		return bodyRes
 	}
 	if opt.Method == "" {
 		opt.Method = "GET"
@@ -33,11 +35,13 @@ func ExecuteRequest(url string, options ...RequestOption) ([]byte, error) {
 		for k, v := range opt.MultiPart.Files {
 			file, err := multiPartWriter.CreateFormFile(k, v.FileName)
 			if err != nil {
-				return nil, err
+				bodyRes.Error = err
+				return bodyRes
 			}
 			_, err = file.Write(v.Content)
 			if err != nil {
-				return nil, err
+				bodyRes.Error = err
+				return bodyRes
 			}
 		}
 		_ = multiPartWriter.Close()
@@ -47,7 +51,8 @@ func ExecuteRequest(url string, options ...RequestOption) ([]byte, error) {
 	}
 	req, err := http.NewRequest(opt.Method, url, body)
 	if err != nil {
-		return nil, err
+		bodyRes.Error = err
+		return bodyRes
 	}
 	if opt.Headers != nil {
 		for k, v := range opt.Headers {
@@ -63,15 +68,8 @@ func ExecuteRequest(url string, options ...RequestOption) ([]byte, error) {
 	req.Header.Add("Accept-Encoding", "identity")
 	do, err := client.Do(req)
 	if err != nil {
-		return nil, err
-	}
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(do.Body)
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, do.Body)
-	if err != nil {
-		return nil, err
+		bodyRes.Error = err
+		return bodyRes
 	}
 	if do.StatusCode != http.StatusOK && do.StatusCode != http.StatusCreated && do.StatusCode != http.StatusNoContent {
 		opt.Retries--
@@ -79,7 +77,12 @@ func ExecuteRequest(url string, options ...RequestOption) ([]byte, error) {
 			time.Sleep(time.Millisecond * 250)
 			return ExecuteRequest(url, options...)
 		}
-		return nil, fmt.Errorf("%d, %s", do.StatusCode, buf.Bytes())
+		bodyRes.Error = fmt.Errorf("http status code %d", do.StatusCode)
+		return bodyRes
 	}
-	return buf.Bytes(), nil
+	bodyRes.Body = do.Body
+	if !opt.NoInstantRead {
+		bodyRes.Read()
+	}
+	return bodyRes
 }
