@@ -1,27 +1,39 @@
 package types
 
 import (
-	"bytes"
 	"io"
 )
 
 type HTTPResult struct {
-	Body      io.ReadCloser
-	Error     error
-	cacheRead []byte
+	Body       io.ReadCloser
+	Error      error
+	StatusCode int
+	cacheRead  []byte
 }
 
 func (r *HTTPResult) Read() []byte {
 	if r.cacheRead != nil {
 		return r.cacheRead
 	}
-	defer r.Close()
-	var buf bytes.Buffer
-	_, err := io.Copy(&buf, r.Body)
-	if err != nil {
+	if r.Body == nil {
 		return nil
 	}
-	r.cacheRead = buf.Bytes()
+	var buf []byte
+	for {
+		var b = make([]byte, 1024*4)
+		n, err := io.ReadFull(r.Body, b)
+		buf = append(buf, b[:n]...)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			if err != io.ErrUnexpectedEOF {
+				return nil
+			}
+		}
+	}
+	defer r.close()
+	r.cacheRead = buf
 	return r.cacheRead
 }
 
@@ -29,6 +41,6 @@ func (r *HTTPResult) ReadString() string {
 	return string(r.Read())
 }
 
-func (r *HTTPResult) Close() {
+func (r *HTTPResult) close() {
 	_ = r.Body.Close()
 }

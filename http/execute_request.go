@@ -23,7 +23,9 @@ func ExecuteRequest(url string, options ...RequestOption) *types.HTTPResult {
 	if opt.Method == "" {
 		opt.Method = "GET"
 	}
-	client := http.Client{}
+	client := http.Client{
+		Timeout: opt.Timeout,
+	}
 	var body io.Reader
 	var multiPartWriter *multipart.Writer
 	if opt.MultiPart != nil {
@@ -69,6 +71,11 @@ func ExecuteRequest(url string, options ...RequestOption) *types.HTTPResult {
 	do, err := client.Do(req)
 	if err != nil {
 		bodyRes.Error = err
+		return bodyRes
+	}
+	bodyRes.StatusCode = do.StatusCode
+	if do.StatusCode == http.StatusForbidden || do.StatusCode == http.StatusNotFound {
+		bodyRes.Error = fmt.Errorf("status code %d", do.StatusCode)
 		return bodyRes
 	}
 	if do.StatusCode != http.StatusOK && do.StatusCode != http.StatusCreated && do.StatusCode != http.StatusNoContent {
