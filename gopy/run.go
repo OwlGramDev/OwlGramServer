@@ -2,7 +2,6 @@ package gopy
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func (c *Context) Run(path string, params any) ([]byte, error) {
@@ -10,5 +9,5 @@ func (c *Context) Run(path string, params any) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return c.runWithVenv(marshal, fmt.Sprintf("python %s", path))
+	return c.RunRaw(path, marshal)
 }
