@@ -11,6 +11,11 @@ type HTTPResult struct {
 	cacheRead  []byte
 }
 
+func (r *HTTPResult) SetFallback(body []byte) {
+	r.cacheRead = body
+	r.Body = nil
+}
+
 func (r *HTTPResult) Read() []byte {
 	if r.cacheRead != nil {
 		return r.cacheRead
@@ -32,7 +37,10 @@ func (r *HTTPResult) Read() []byte {
 			}
 		}
 	}
-	defer r.close()
+	defer func() {
+		r.close()
+		r.Body = nil
+	}()
 	r.cacheRead = buf
 	return r.cacheRead
 }
