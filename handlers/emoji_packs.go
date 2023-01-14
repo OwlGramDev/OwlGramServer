@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"OwlGramServer/consts"
-	"OwlGramServer/telegram/emoji"
-	"OwlGramServer/telegram/emoji/types"
+	"OwlGramServer/emoji"
+	"OwlGramServer/emoji/types"
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
@@ -19,12 +19,12 @@ func EmojiPacks(ctx *fasthttp.RequestCtx, clientEmoji *emoji.Context) {
 	var result []types.PacksInfo
 	for _, pack := range clientEmoji.EmojiPacks {
 		result = append(result, types.PacksInfo{
-			Name:     pack.DisplayName,
-			Version:  pack.Version,
-			Id:       pack.Identifier,
-			Preview:  fmt.Sprintf("%s/previews/%s.png?v=%d", consts.ServerBase, pack.Identifier, pack.Version),
-			File:     fmt.Sprintf("%s/packs/%s.zip?v=%s", consts.ServerBase, pack.Identifier, pack.MD5),
-			FileSize: len(pack.Emojies),
+			Name:     pack.Name,
+			Version:  pack.UnicodeVersion,
+			ID:       pack.ID,
+			Preview:  fmt.Sprintf("%s/previews/%s.png?v=%d", consts.ServerBase, pack.ID, pack.UnicodeVersion),
+			File:     fmt.Sprintf("%s/packs/%s.zip?v=%s", consts.ServerBase, pack.ID, pack.MD5),
+			FileSize: len(pack.EmojiZip),
 			MD5:      pack.MD5,
 		})
 	}

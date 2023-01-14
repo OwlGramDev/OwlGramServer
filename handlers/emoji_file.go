@@ -1,16 +1,16 @@
 package handlers
 
 import (
-	"OwlGramServer/telegram/emoji"
+	"OwlGramServer/emoji"
 	"github.com/valyala/fasthttp"
 )
 
 func EmojiFile(ctx *fasthttp.RequestCtx, identifier string, clientEmoji *emoji.Context) {
 	for _, pack := range clientEmoji.EmojiPacks {
-		if pack.Identifier == identifier {
+		if pack.ID == identifier {
 			ctx.SetContentType("application/zip")
 			ctx.SetStatusCode(fasthttp.StatusOK)
-			ctx.SetBody(pack.Emojies)
+			ctx.SetBody(pack.EmojiZip)
 			ctx.SetConnectionClose()
 			return
 		}

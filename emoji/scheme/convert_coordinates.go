@@ -1,6 +1,6 @@
 package scheme
 
-import "OwlGramServer/telegram/emoji/scheme/types"
+import "OwlGramServer/emoji/scheme/types"
 
 func convertCoordinates(rawCoords [][]string) map[string]*types.Coordinates {
 	emojiMap := make(map[string]*types.Coordinates)

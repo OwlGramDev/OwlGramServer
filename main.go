@@ -3,11 +3,11 @@ package main
 import (
 	"OwlGramServer/consts"
 	"OwlGramServer/crowdin"
+	"OwlGramServer/emoji"
 	"OwlGramServer/gopy"
 	"OwlGramServer/http/webserver"
 	"OwlGramServer/telegram/bot"
 	"OwlGramServer/telegram/checker"
-	"OwlGramServer/telegram/emoji"
 	"OwlGramServer/updates"
 	"OwlGramServer/utilities"
 	"os"
