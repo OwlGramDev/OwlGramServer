@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-func downloadEmojis(pd map[string]*types.ProviderDescriptor, emojiResult map[string]*types.EmojiRaw) error {
+func downloadEmojis(pd []*types.ProviderDescriptor, emojiResult map[string]*types.EmojiRaw) error {
 	var wg sync.WaitGroup
 	responses := make(chan *types.EmojiRequest, len(emojiResult)*len(pd))
 	semaphore := concurrency.NewPool[string](400)
@@ -54,7 +54,11 @@ func downloadEmojis(pd map[string]*types.ProviderDescriptor, emojiResult map[str
 		if len(data) == 0 || resp.HttpResult.Error != nil {
 			continue
 		}
-		pd[resp.Provider].Emojis[resp.Emoji] = data
+		for _, providerData := range pd {
+			if providerData.ID == resp.Provider {
+				providerData.Emojis[resp.Emoji] = data
+			}
+		}
 	}
 	return nil
 }

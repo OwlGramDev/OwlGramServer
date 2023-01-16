@@ -3,6 +3,7 @@ package emojipedia
 import (
 	"OwlGramServer/emoji/emojipedia/types"
 	typesScheme "OwlGramServer/emoji/scheme/types"
+	"OwlGramServer/utilities"
 	"fmt"
 	"strings"
 )
@@ -13,7 +14,7 @@ func mapEmojis(emojis [][]string, mapScheme map[string]*typesScheme.Coordinates)
 		var emojiFound bool
 		for _, emojiData := range emojis {
 			emojiRemote := strings.ReplaceAll(emojiData[3], "-fe0f", "")
-			emojiLocal := strings.ReplaceAll(getHex(emoji), "-fe0f", "")
+			emojiLocal := utilities.GetHexFromEmoji(emoji, "-", false)
 			emojiName := emojiData[1]
 			if emojiLocal == emojiRemote {
 				if _, ok := emojiResult[emoji]; ok {
@@ -29,7 +30,7 @@ func mapEmojis(emojis [][]string, mapScheme map[string]*typesScheme.Coordinates)
 			}
 		}
 		if !emojiFound {
-			return nil, fmt.Errorf("emoji %s not found", getHex(emoji))
+			return nil, fmt.Errorf("emoji %s not found", utilities.GetHexFromEmoji(emoji, "-", false))
 		}
 	}
 	return emojiResult, nil

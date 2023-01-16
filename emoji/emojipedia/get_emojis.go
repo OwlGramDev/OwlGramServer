@@ -3,13 +3,16 @@ package emojipedia
 import (
 	"OwlGramServer/consts"
 	"OwlGramServer/emoji/emojipedia/types"
+	"OwlGramServer/emoji/github"
 	typesScheme "OwlGramServer/emoji/scheme/types"
 	"OwlGramServer/gopy"
 	"OwlGramServer/http"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path"
 	"regexp"
+	"strings"
 )
 
 func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*types.ProviderDescriptor, error) {
@@ -17,15 +20,13 @@ func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*ty
 	if err != nil {
 		return nil, err
 	}
-	var pdTemp []*types.ProviderDescriptor
-	err = json.Unmarshal(file, &pdTemp)
+	var pd []*types.ProviderDescriptor
+	err = json.Unmarshal(file, &pd)
 	if err != nil {
 		return nil, err
 	}
-	pd := make(map[string]*types.ProviderDescriptor)
-	for _, v := range pdTemp {
+	for _, v := range pd {
 		v.Emojis = make(map[string][]byte)
-		pd[v.ID] = v
 	}
 	res := http.ExecuteRequest("https://emojipedia.org/beaming-face-with-smiling-eyes/")
 	if res.Error != nil {
@@ -33,9 +34,28 @@ func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*ty
 	}
 	compile, _ := regexp.Compile(`<div.*class="vendor-image">[^<]<img.*srcset="(.*/(.*?)/\d+/).*\dx".*alt=".*?".*width="\d+".*height="\d+">`)
 	linkData := compile.FindAllStringSubmatch(res.ReadString(), -1)
-	for _, link := range linkData {
-		if _, ok := pd[link[2]]; ok {
-			pd[link[2]].Link = link[1]
+	for _, v := range pd {
+		for _, link := range linkData {
+			if v.GetID() == link[2] {
+				if v.HaveVariant() {
+					tmpLink := strings.Index(link[1], v.GetID())
+					tmpHtml := http.ExecuteRequest(fmt.Sprintf("https://emojipedia.org/%s/beaming-face-with-smiling-eyes/", v.ID))
+					if tmpHtml.Error != nil {
+						return nil, tmpHtml.Error
+					}
+					tmpRegex, _ := regexp.Compile(`<img src=".*?/\d+/.*?/(\d+)/.*"\s*srcset=".*2x".*?>`)
+					tmpData := tmpRegex.FindAllStringSubmatch(tmpHtml.ReadString(), -1)
+					if tmpLink != -1 && len(tmpData) > 0 {
+						v.Link = fmt.Sprintf("%s%s/%s/", link[1][:tmpLink], v.GetID(), tmpData[0][1])
+					} else {
+						return nil, fmt.Errorf("can't find link for %s", v.ID)
+					}
+				} else {
+					v.Link = link[1]
+				}
+				v.Link = strings.ReplaceAll(v.Link, "thumbs/240", "thumbs/120")
+				break
+			}
 		}
 	}
 	res = http.ExecuteRequest("https://emojipedia.org/apple/")
@@ -51,15 +71,25 @@ func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*ty
 	if err != nil {
 		return nil, err
 	}
+
+	// Enhance Fluent Emojis with GitHub Emojis
+	zip, err := github.DownloadZip(scheme)
+	if err != nil {
+		return nil, err
+	}
+	for _, v := range pd {
+		if v.GetID() == "microsoft-teams" {
+			for k, c := range zip {
+				v.Emojis[k] = c
+			}
+			break
+		}
+	}
 	versionsCheck, err := getVersions()
 	determineVersion(pd, versionsCheck)
 	zipEmojis(pd, scheme.Data, pythonClient)
 	for _, v := range pd {
 		v.Emojis = nil
 	}
-	var pdTemp2 []*types.ProviderDescriptor
-	for _, v := range pd {
-		pdTemp2 = append(pdTemp2, v)
-	}
-	return pdTemp2, nil
+	return pd, nil
 }

@@ -10,6 +10,7 @@ const WebsiteHome = BaseWWWPath + "owlgram.org/"
 const LibsPath = WebServerPath + "libs/"
 
 const CacheFolder = WebServerPath + "cache/"
+const CacheFolderMemory = CacheFolder + "memory.dat"
 const CacheFolderBundles = CacheFolder + "bundles/"
 const CacheFolderExtractedApks = CacheFolder + "extracted_apks/"
 const UploadsFolder = CacheFolder + "uploads/"
@@ -81,3 +82,5 @@ const AppGalleryApi = "https://connect-api.cloud.huawei.com/api/"
 const AppGalleryAppID = 105849965
 
 const EmojiListConfig = ConfigFilesFolder + "emoji_list.json"
+const FluentGithubRepo = "fluentui-emoji"
+const FluentGithubRepoOwner = "microsoft"

@@ -18,16 +18,22 @@ import (
 	"path"
 )
 
-func zipEmojis(pd map[string]*types.ProviderDescriptor, mapScheme map[string]*typesScheme.Coordinates, pythonClient *gopy.Context) {
+func zipEmojis(pd []*types.ProviderDescriptor, mapScheme map[string]*typesScheme.Coordinates, pythonClient *gopy.Context) {
 	for _, v := range pd {
-		run, _ := pythonClient.Run(path.Join(consts.PythonLibPillow, "compress.py"), v.Emojis)
+		run, _ := pythonClient.Run(path.Join(consts.PythonLibPillow, "compress.py"), v)
 		_ = json.Unmarshal(run, &v.Emojis)
 	}
 	for _, v := range pd {
 		v.EmojiCount = len(v.Emojis)
 	}
 	// Fix missing emojis
-	for appleEmoji, appleContent := range pd["apple"].Emojis {
+	var appleEmojis map[string][]byte
+	for _, v := range pd {
+		if v.ID == "apple" {
+			appleEmojis = v.Emojis
+		}
+	}
+	for appleEmoji, appleContent := range appleEmojis {
 		for _, v := range pd {
 			if _, ok := v.Emojis[appleEmoji]; !ok {
 				v.Emojis[appleEmoji] = appleContent
