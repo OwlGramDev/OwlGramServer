@@ -10,7 +10,7 @@ const WebsiteHome = BaseWWWPath + "owlgram.org/"
 const LibsPath = WebServerPath + "libs/"
 
 const CacheFolder = WebServerPath + "cache/"
-const CacheFolderMemory = CacheFolder + "memory.dat"
+const CacheFolderEmojis = CacheFolder + "emojis/"
 const CacheFolderBundles = CacheFolder + "bundles/"
 const CacheFolderExtractedApks = CacheFolder + "extracted_apks/"
 const UploadsFolder = CacheFolder + "uploads/"
@@ -34,7 +34,6 @@ const OwlGramFilesServer = "https://files.owlgram.org/"
 
 const DcCheckerCacheFile = CacheFolder + "dc_checker_cache.json"
 const ReviewsCacheFile = CacheFolder + "reviews_cache.json"
-const TelegramSessionFile = CacheFolder + "tg_session.dat"
 
 var AliasSupported = []string{"/", ";", ".", "+", "!"}
 

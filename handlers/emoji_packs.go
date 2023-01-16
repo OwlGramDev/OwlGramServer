@@ -19,13 +19,14 @@ func EmojiPacks(ctx *fasthttp.RequestCtx, clientEmoji *emoji.Context) {
 	var result []types.PacksInfo
 	for _, pack := range clientEmoji.EmojiPacks {
 		result = append(result, types.PacksInfo{
-			Name:     pack.Name,
-			Version:  pack.UnicodeVersion,
-			ID:       emoji.LegacyID(pack.ID, pack.GetID()),
-			Preview:  fmt.Sprintf("%s/previews/%s.png?v=%s", consts.ServerBase, pack.ID, pack.MD5),
-			File:     fmt.Sprintf("%s/packs/%s.zip?v=%s", consts.ServerBase, pack.ID, pack.MD5),
-			FileSize: len(pack.EmojiZip),
-			MD5:      pack.MD5,
+			Name:       pack.Name,
+			Version:    pack.UnicodeVersion,
+			ID:         emoji.LegacyID(pack.ID, pack.GetID()),
+			Preview:    fmt.Sprintf("%s/previews/%s.png?v=%s", consts.ServerBase, pack.ID, pack.MD5),
+			File:       fmt.Sprintf("%s/packs/%s.zip?v=%s", consts.ServerBase, pack.ID, pack.MD5),
+			FileSize:   len(pack.EmojiZip),
+			EmojiCount: pack.EmojiCount,
+			MD5:        pack.MD5,
 		})
 	}
 	res, _ := json.Marshal(result)
