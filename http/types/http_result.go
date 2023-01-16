@@ -1,6 +1,7 @@
 package types
 
 import (
+	"OwlGramServer/utilities"
 	"io"
 )
 
@@ -23,19 +24,9 @@ func (r *HTTPResult) Read() []byte {
 	if r.Body == nil {
 		return nil
 	}
-	var buf []byte
-	for {
-		var b = make([]byte, 1024*4)
-		n, err := io.ReadFull(r.Body, b)
-		buf = append(buf, b[:n]...)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			if err != io.ErrUnexpectedEOF {
-				return nil
-			}
-		}
+	buf, err := utilities.ReadFile(r.Body)
+	if err != nil {
+		return nil
 	}
 	defer func() {
 		r.close()
