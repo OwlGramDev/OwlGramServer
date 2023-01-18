@@ -10,6 +10,7 @@ type ProviderDescriptor struct {
 	Link           string
 	EmojiZip       []byte
 	Preview        []byte
+	EmojiMap       map[string]*EmojiRaw
 	UnicodeVersion int
 	EmojiCount     int
 	MD5            string

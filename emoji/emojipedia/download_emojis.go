@@ -12,12 +12,16 @@ import (
 	"sync"
 )
 
-func downloadEmojis(pd []*types.ProviderDescriptor, emojiResult map[string]*types.EmojiRaw) error {
+func downloadEmojis(pd []*types.ProviderDescriptor) error {
+	var totalEmojis int
+	for _, provider := range pd {
+		totalEmojis += len(provider.EmojiMap)
+	}
 	var wg sync.WaitGroup
-	responses := make(chan *types.EmojiRequest, len(emojiResult)*len(pd))
+	responses := make(chan *types.EmojiRequest, totalEmojis)
 	semaphore := concurrency.NewPool[string](400)
-	for i, data := range emojiResult {
-		for _, providerData := range pd {
+	for _, providerData := range pd {
+		for i, data := range providerData.EmojiMap {
 			emojiLink := fmt.Sprintf("%s%s_%s.png", providerData.Link, data.EmojiName, data.EmojiHex)
 			wg.Add(1)
 			semaphore.Enqueue(func(params ...string) {

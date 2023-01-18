@@ -7,6 +7,7 @@ import (
 	typesScheme "OwlGramServer/emoji/scheme/types"
 	"OwlGramServer/gopy"
 	"OwlGramServer/http"
+	httpTypes "OwlGramServer/http/types"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -58,16 +59,26 @@ func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*ty
 			}
 		}
 	}
-	res = http.ExecuteRequest("https://emojipedia.org/apple/")
-	if res.Error != nil {
-		return nil, res.Error
+	appleRes := http.ExecuteRequest("https://emojipedia.org/apple/")
+	for _, v := range pd {
+		var res *httpTypes.HTTPResult
+		if v.HaveVariant() {
+			res = http.ExecuteRequest(fmt.Sprintf("https://emojipedia.org/%s/", v.ID))
+		} else {
+			res = appleRes
+		}
+		if res.Error != nil {
+			return nil, res.Error
+		}
+		compile, _ = regexp.Compile(`<img.*srcset=".*/\d+/\w+/\d+/([a-z0-9-]+_?[a-z0-9-]+)_(([^_]*)_?[^_]*)\.png\s+\dx`)
+		emojiResult, err := mapEmojis(compile.FindAllStringSubmatch(res.ReadString(), -1), scheme.Data)
+		if err != nil {
+			return nil, err
+		}
+		v.EmojiMap = emojiResult
 	}
-	compile, _ = regexp.Compile(`<img.*srcset=".*/\d+/\w+/\d+/([a-z0-9-]+_?[a-z0-9-]+)_(([^_]*)_?[^_]*)\.png\s+\dx`)
-	emojiResult, err := mapEmojis(compile.FindAllStringSubmatch(res.ReadString(), -1), scheme.Data)
-	if err != nil {
-		return nil, err
-	}
-	err = downloadEmojis(pd, emojiResult)
+
+	err = downloadEmojis(pd)
 	if err != nil {
 		return nil, err
 	}
