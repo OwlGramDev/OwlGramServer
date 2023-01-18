@@ -4,14 +4,12 @@ import (
 	"OwlGramServer/consts"
 	"OwlGramServer/crowdin"
 	"OwlGramServer/emoji"
-	"OwlGramServer/emoji/emojipedia/types"
 	"OwlGramServer/gopy"
 	"OwlGramServer/http/webserver"
 	"OwlGramServer/telegram/bot"
 	"OwlGramServer/telegram/checker"
 	"OwlGramServer/updates"
 	"OwlGramServer/utilities"
-	"encoding/gob"
 	"os"
 	"os/exec"
 )
@@ -24,8 +22,6 @@ var emojiClient *emoji.Context
 var pythonClient *gopy.Context
 
 func main() {
-	gob.Register([]*types.ProviderDescriptor{})
-	gob.Register([]byte{})
 	consts.LoadEnv()
 	if _, err := os.Stat(consts.UploadsFolder); os.IsNotExist(err) {
 		_ = os.Mkdir(consts.UploadsFolder, 0775)
