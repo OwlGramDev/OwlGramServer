@@ -20,6 +20,7 @@ func downloadEmojis(pd []*types.ProviderDescriptor) error {
 	var wg sync.WaitGroup
 	responses := make(chan *types.EmojiRequest, totalEmojis)
 	semaphore := concurrency.NewPool[string](400)
+	// TODO: Too many goroutines still running, need to fix this
 	for _, providerData := range pd {
 		for i, data := range providerData.EmojiMap {
 			emojiLink := fmt.Sprintf("%s%s_%s.png", providerData.Link, data.EmojiName, data.EmojiHex)

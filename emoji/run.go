@@ -4,6 +4,7 @@ import (
 	"OwlGramServer/consts"
 	"OwlGramServer/emoji/emojipedia"
 	"OwlGramServer/emoji/scheme"
+	"runtime"
 	"sort"
 	"time"
 )
@@ -21,6 +22,7 @@ func (c *Context) Run() {
 		}
 		isRunning = true
 		c.backup()
-		time.Sleep(time.Hour * 5)
+		runtime.GC()
+		time.Sleep(time.Hour * 24 * 7)
 	}
 }
