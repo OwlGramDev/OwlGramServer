@@ -36,7 +36,7 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 	for i, commit := range event.Commits {
 		diff := len(event.Commits) - (i + 1)
 		if i >= 15 && len(event.Commits) > 15 && diff > 0 {
-			moreCompare := fmt.Sprintf("https://github.com/OwlGramDev/OwlGram/compare/%s...%s", commit.ID[:12], event.Commits[len(event.Commits)-1].ID[:12])
+			moreCompare := fmt.Sprintf("%s/compare/%s...%s", event.Repository.HTMLUrl, commit.ID[:12], event.Commits[len(event.Commits)-1].ID[:12])
 			message += fmt.Sprintf("➕ And %d more <a href='%s'>commits...</a>\n", diff, moreCompare)
 			break
 		}
