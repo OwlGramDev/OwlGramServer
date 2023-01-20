@@ -27,7 +27,10 @@ func DownloadZip(scheme *typeScheme.TgAScheme) (map[string][]byte, error) {
 		Ref: "main",
 	}, true)
 	r := http.ExecuteRequest(rc.String())
-	zipReader, _ := zip.NewReader(bytes.NewReader(r.Read()), int64(len(r.Read())))
+	zipReader, err := zip.NewReader(bytes.NewReader(r.Read()), int64(len(r.Read())))
+	if err != nil {
+		return nil, err
+	}
 	unicodeAlias := make(map[string]string)
 	for emoji := range scheme.Data {
 		unicode := utilities.GetEmojiFromHex(utilities.GetHexFromEmoji(emoji, " ", false), " ", false)
