@@ -34,9 +34,10 @@ func SendPushEvent(ctx *fasthttp.RequestCtx) {
 	}
 	message := fmt.Sprintf("📋 New Update in <a href='%s/tree/%s'>%s/%s</a>\n\n", event.Repository.HTMLUrl, branchName, event.Repository.FullName, branchName)
 	for i, commit := range event.Commits {
-		if i >= 15 && len(event.Commits) > 15 {
+		diff := len(event.Commits) - (i + 1)
+		if i >= 15 && len(event.Commits) > 15 && diff > 0 {
 			moreCompare := fmt.Sprintf("https://github.com/OwlGramDev/OwlGram/compare/%s...%s", commit.ID[:12], event.Commits[len(event.Commits)-1].ID[:12])
-			message += fmt.Sprintf("➕ And %d more <a href='%s'>commits...</a>\n", len(event.Commits)-(i+1), moreCompare)
+			message += fmt.Sprintf("➕ And %d more <a href='%s'>commits...</a>\n", diff, moreCompare)
 			break
 		}
 		message += fmt.Sprintf("‣ %s (<a href='%s'>%s</a>)\n", commit.Message, commit.URL, commit.ID[:7])
