@@ -48,10 +48,14 @@ func (ctx *Context) Run() {
 						notificationMessage += "<b>• CPU:</b> " + *review.CPUVendor + "\n"
 					}
 					var androidName string
-					if int(review.AndroidSDK)-1 < len(consts.AndroidVersionMap) {
-						androidName = consts.AndroidVersionMap[int(review.AndroidSDK)-1]
+					if review.AndroidSDK >= 0 {
+						if int(review.AndroidSDK)-1 < len(consts.AndroidVersionMap) {
+							androidName = consts.AndroidVersionMap[int(review.AndroidSDK)-1]
+						} else {
+							androidName = fmt.Sprintf("??? (%d)", review.AndroidSDK)
+						}
 					} else {
-						androidName = fmt.Sprintf("??? (%d)", review.AndroidSDK)
+						androidName = "Sconosciuto"
 					}
 					notificationMessage += "<b>• OS Android:</b> <code>" + androidName + "</code>\n"
 					if review.AppVersionCode != 0 {
