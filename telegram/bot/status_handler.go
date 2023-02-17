@@ -136,10 +136,16 @@ func (c *Context) StatusHandler(status int) {
 			client := github.NewClient(nil)
 			commits, _, _ := client.Repositories.ListCommits(ctx, "DrkLO", "Telegram", nil)
 			var buttons [][]types.InlineKeyboardButton
-			for i := 0; i < 4; i++ {
+			max := 4
+			for i := 0; i < max; i++ {
 				version := *commits[i].GetCommit().Message
 				r, _ := regexp.Compile(`\d+(\.\d+)+`)
-				version = r.FindStringSubmatch(version)[0]
+				versionData := r.FindStringSubmatch(version)
+				if len(versionData) == 0 {
+					max++
+					continue
+				}
+				version = versionData[0]
 				buttons = append(buttons, []types.InlineKeyboardButton{
 					{
 						Text:         version,
