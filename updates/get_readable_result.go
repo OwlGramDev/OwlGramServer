@@ -8,7 +8,6 @@ import (
 
 func getReadableResult(postHtml string) string {
 	r1 := regexp.MustCompile(`<i\sclass="emoji"\sstyle="background-image:url\(.*?\)">(.*?)</i>`)
-	r2 := regexp.MustCompile(`<tg-emoji\semoji-id=".*?">(.*?)</tg-emoji>`)
 	r3 := regexp.MustCompile(`target=".*?" rel=".*?" onclick=".*?"`)
 	r4 := regexp.MustCompile(`<b>🔄.*?APK.*>`)
 	r5 := regexp.MustCompile(`<b>📦.*?APK.*>`)
@@ -16,7 +15,6 @@ func getReadableResult(postHtml string) string {
 	r7 := regexp.MustCompile(`" >`)
 
 	postHtml = r1.ReplaceAllString(postHtml, "$1")
-	postHtml = r2.ReplaceAllString(postHtml, "$1")
 	postHtml = strings.ReplaceAll(postHtml, "<br/>", "\n")
 	postHtml = r3.ReplaceAllString(postHtml, "")
 	postHtml = r4.ReplaceAllString(postHtml, "")
