@@ -41,7 +41,32 @@ func Upload(bundleList []bundles.PackageInfo, bannerTmp string, hrefTmp string, 
 			listener(-1)
 			return
 		}
-		listener((float64(i) / float64(len(bundleList))) * 100.0)
+		listener((float64(i) / float64(len(bundleList)+1)) * 100.0)
+	}
+	foundUniversal := false
+	for _, bundle := range bundleList {
+		if bundle.AbiName == "universal" && bundle.IsApk {
+			foundUniversal = true
+			r, err := os.ReadFile(bundle.Path)
+			if err != nil {
+				listener(-1)
+				return
+			}
+			pathSave := consts.ServerFilesFolder
+			if consts.IsDebug {
+				pathSave = consts.DebugFilesFolder
+			}
+			err = os.WriteFile(path.Join(pathSave, "universal-stable.apk"), r, 0755)
+			if err != nil {
+				listener(-1)
+				return
+			}
+			listener(100.0)
+		}
+	}
+	if !foundUniversal {
+		listener(-1)
+		return
 	}
 	updateFileNew := types.UpdatesDescriptor{
 		Updates:       &types.UpdateList{},
