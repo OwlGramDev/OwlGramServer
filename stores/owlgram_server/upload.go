@@ -22,6 +22,10 @@ func Upload(bundleList []bundles.PackageInfo, bannerTmp string, hrefTmp string, 
 		}
 	}
 	bundleList = listApksTmp
+	totalCount := float64(len(bundleList))
+	if releaseType == "stable" {
+		totalCount += 1
+	}
 	for i, bundle := range bundleList {
 		r, err := os.ReadFile(bundle.Path)
 		if err != nil {
@@ -41,32 +45,34 @@ func Upload(bundleList []bundles.PackageInfo, bannerTmp string, hrefTmp string, 
 			listener(-1)
 			return
 		}
-		listener((float64(i) / float64(len(bundleList)+1)) * 100.0)
+		listener((float64(i) / totalCount) * 100.0)
 	}
-	foundUniversal := false
-	for _, bundle := range bundleList {
-		if bundle.AbiName == "universal" && bundle.IsApk {
-			foundUniversal = true
-			r, err := os.ReadFile(bundle.Path)
-			if err != nil {
-				listener(-1)
-				return
+	if releaseType == "stable" {
+		foundUniversal := false
+		for _, bundle := range bundleList {
+			if bundle.AbiName == "universal" && bundle.IsApk {
+				foundUniversal = true
+				r, err := os.ReadFile(bundle.Path)
+				if err != nil {
+					listener(-1)
+					return
+				}
+				pathSave := consts.ServerFilesFolder
+				if consts.IsDebug {
+					pathSave = consts.DebugFilesFolder
+				}
+				err = os.WriteFile(path.Join(pathSave, "universal-stable.apk"), r, 0755)
+				if err != nil {
+					listener(-1)
+					return
+				}
+				listener(100.0)
 			}
-			pathSave := consts.ServerFilesFolder
-			if consts.IsDebug {
-				pathSave = consts.DebugFilesFolder
-			}
-			err = os.WriteFile(path.Join(pathSave, "universal-stable.apk"), r, 0755)
-			if err != nil {
-				listener(-1)
-				return
-			}
-			listener(100.0)
 		}
-	}
-	if !foundUniversal {
-		listener(-1)
-		return
+		if !foundUniversal {
+			listener(-1)
+			return
+		}
 	}
 	updateFileNew := types.UpdatesDescriptor{
 		Updates:       &types.UpdateList{},
