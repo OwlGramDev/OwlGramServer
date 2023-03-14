@@ -12,7 +12,7 @@ import (
 
 func LoadTgAScheme() *types.TgAScheme {
 	linkFile := fmt.Sprintf(
-		"https://raw.githubusercontent.com/%s/%s/master/TMessagesProj/src/main/java/org/telegram/messenger/EmojiData.java",
+		"https://raw.githubusercontent.com/%s/%s/develop/TMessagesProj/src/main/java/org/telegram/messenger/EmojiData.java",
 		consts.GithubRepoOwner,
 		consts.GithubRepo,
 	)
