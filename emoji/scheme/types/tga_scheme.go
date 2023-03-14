@@ -11,3 +11,12 @@ func (t *TgAScheme) GetCoordinates(emoji string) *Coordinates {
 	}
 	return t.Data[emoji]
 }
+
+func (t *TgAScheme) GetEmoji(coordinates Coordinates) string {
+	for emoji, coord := range t.Data {
+		if coord.X == coordinates.X && coord.Y == coordinates.Y {
+			return emoji
+		}
+	}
+	return ""
+}

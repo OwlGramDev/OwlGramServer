@@ -22,6 +22,9 @@ func downloadEmojis(pd []*types.ProviderDescriptor) error {
 	semaphore := concurrency.NewPool[string](400)
 	// TODO: Too many goroutines still running, need to fix this
 	for _, providerData := range pd {
+		if providerData.ID == "apple" {
+			continue
+		}
 		for i, data := range providerData.EmojiMap {
 			emojiLink := fmt.Sprintf("%s%s_%s.png", providerData.Link, data.EmojiName, data.EmojiHex)
 			wg.Add(1)

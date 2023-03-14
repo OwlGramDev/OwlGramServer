@@ -82,6 +82,15 @@ func GetEmojis(scheme *typesScheme.TgAScheme, pythonClient *gopy.Context) ([]*ty
 	if err != nil {
 		return nil, err
 	}
+	for _, v := range pd {
+		if v.GetID() == "apple" {
+			v.Emojis, err = github.DownloadApple(scheme)
+			if err != nil {
+				return nil, err
+			}
+			break
+		}
+	}
 
 	// Enhance Fluent Emojis with GitHub Emojis
 	zip, err := github.DownloadZip(scheme)

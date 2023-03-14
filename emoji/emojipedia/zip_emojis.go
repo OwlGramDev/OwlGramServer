@@ -20,6 +20,9 @@ import (
 
 func zipEmojis(pd []*types.ProviderDescriptor, mapScheme map[string]*typesScheme.Coordinates, pythonClient *gopy.Context) {
 	for _, v := range pd {
+		if v.ID == "apple" {
+			continue
+		}
 		run, _ := pythonClient.Run(path.Join(consts.PythonLibPillow, "compress.py"), v)
 		_ = json.Unmarshal(run, &v.Emojis)
 	}
