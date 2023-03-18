@@ -4,6 +4,7 @@ import (
 	"OwlGramServer/consts"
 	updates "OwlGramServer/updates/types"
 	"OwlGramServer/utilities"
+	"fmt"
 	"github.com/Squirrel-Network/gobotapi"
 	"github.com/Squirrel-Network/gobotapi/methods"
 	"github.com/Squirrel-Network/gobotapi/types"
@@ -65,6 +66,31 @@ func (c *Context) handleCallbackQuery(client *gobotapi.Client, callbackQuery typ
 				} else if releaseType[2] == "note" {
 					c.StatusHandler(utilities.NeededNotes)
 				}
+			} else if releaseType[1] == "copy_desc" {
+				for language, languageMap := range c.UpdateClient.UpdatesDescriptor.Localizations {
+					for varName, content := range languageMap {
+						dataInfo := strings.Split(varName, "_")
+						if len(dataInfo) > 1 && dataInfo[1] != c.ReleaseType {
+							c.LocalizationsTmp[language][fmt.Sprintf("%s_%s", dataInfo[0], c.ReleaseType)] = content
+						}
+					}
+				}
+				var nameCopy string
+				var updateInfo *updates.UpdateInfo
+				if c.ReleaseType == "stable" {
+					updateInfo = c.UpdateClient.UpdatesDescriptor.Updates.Beta
+					nameCopy = "Beta"
+				} else {
+					updateInfo = c.UpdateClient.UpdatesDescriptor.Updates.Stable
+					nameCopy = "Stabile"
+				}
+				c.HrefTmp = updateInfo.Href
+				c.BannerTmp = strings.ReplaceAll(updateInfo.Banner, consts.OwlGramFilesServer, consts.ServerFilesFolder)
+				_, _ = client.Invoke(&methods.AnswerCallbackQuery{
+					CallbackQueryID: callbackQuery.ID,
+					Text:            "✅ Copiato da " + nameCopy,
+				})
+				c.StatusHandler(utilities.NeededChangelogs)
 			} else if releaseType[1] == "send_image" {
 				_, _ = client.Invoke(&methods.AnswerCallbackQuery{
 					CallbackQueryID: callbackQuery.ID,

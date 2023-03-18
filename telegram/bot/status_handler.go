@@ -225,6 +225,12 @@ func (c *Context) StatusHandler(status int) {
 				CallbackData: fmt.Sprintf("release:changelogs:%s", k),
 			})
 		}
+		var nameCopy string
+		if c.ReleaseType == "stable" {
+			nameCopy = "Beta"
+		} else {
+			nameCopy = "Stabile"
+		}
 		_, _ = c.TelegramClient.Invoke(&methods.EditMessageText{
 			ChatID:    c.CacheMessage.Chat.ID,
 			MessageID: c.CacheMessage.MessageID,
@@ -237,6 +243,10 @@ func (c *Context) StatusHandler(status int) {
 						{
 							Text:         "✏️ Modifica",
 							CallbackData: "release:edit_text",
+						},
+						{
+							Text:         fmt.Sprintf("📋 Copia Descrizione (%s)", nameCopy),
+							CallbackData: "release:copy_desc",
 						},
 					},
 					{
